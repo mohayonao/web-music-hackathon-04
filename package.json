@@ -1,0 +1,20 @@
+{
+  "name": "web-music-hackathon-04",
+  "description": "unidirectional data flow RPC framework",
+  "version": "2015.07.18",
+  "author": "mohayonao <mohayonao@gmail.com>",
+  "bugs": {
+    "url": "https://github.com/mohayonao/web-music-hackathon-04/issues"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "homepage": "https://github.com/mohayonao/web-music-hackathon-04/",
+  "keywords": [],
+  "license": "MIT",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/mohayonao/web-music-hackathon-04.git"
+  },
+  "scripts": {}
+}
