@@ -3,26 +3,32 @@ import utils from "../utils";
 
 const RELEASE_TIME = 0.025;
 
-export default class SineTone extends Tone {
+export default class DelayTone extends Tone {
   [INITIALIZE]() {
-    this.volume = utils.linexp(this.velocity, 0, 127, 0.5, 0.75);
+    this.volume = utils.linexp(this.velocity, 0, 127, 1e-3, 0.75);
 
     let frequency = utils.midicps(this.noteNumber);
 
     this.osc1 = this.audioContext.createOscillator();
-    this.osc1.frequency.value = frequency;
+    this.osc1.type = "triangle";
+    this.osc1.frequency.value = frequency * 2;
+    this.osc1.detune.value = utils.finedetune(+4);
 
     this.osc2 = this.audioContext.createOscillator();
-    this.osc2.frequency.value = frequency;
+    this.osc2.type = "triangle";
+    this.osc2.frequency.value = frequency * 2;
+    this.osc2.detune.value = utils.finedetune(-4);
 
     this.osc1.onended = () => {
       this.emit("ended");
     };
 
+    this.gain = this.audioContext.createGain();
     this.releaseNode = this.audioContext.createGain();
 
-    this.osc1.connect(this.releaseNode);
-    this.osc2.connect(this.releaseNode);
+    this.osc1.connect(this.gain);
+    this.osc2.connect(this.gain);
+    this.gain.connect(this.releaseNode);
 
     this.outlet = this.releaseNode;
   }
@@ -31,11 +37,8 @@ export default class SineTone extends Tone {
     this.osc1.start(t0);
     this.osc2.start(t0);
 
-    this.osc1.detune.setValueAtTime(utils.finedetune(+10), t0);
-    this.osc1.detune.linearRampToValueAtTime(0, t0 + 4);
-
-    this.osc2.detune.setValueAtTime(utils.finedetune(-10), t0);
-    this.osc2.detune.linearRampToValueAtTime(0, t0 + 4);
+    this.gain.gain.setValueAtTime(1, t0);
+    this.gain.gain.exponentialRampToValueAtTime(1e-3, t0 + 1.5);
 
     this.releaseNode.gain.setValueAtTime(this.volume, t0);
   }
@@ -53,6 +56,7 @@ export default class SineTone extends Tone {
   [DISPOSE]() {
     this.osc1.disconnect();
     this.osc2.disconnect();
-    this.osc1 = this.osc2 = this.releaseNode = null;
+    this.gain.disconnect();
+    this.osc1 = this.osc2 = this.gain = this.releaseNode = null;
   }
 }

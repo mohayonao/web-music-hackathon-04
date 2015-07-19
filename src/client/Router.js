@@ -3,12 +3,13 @@ import WorkerTimer from "worker-timer";
 import SoundManager from "./SoundManager";
 import SyncDate from "./SyncDate";
 import Timeline from "../utils/Timeline";
+import WebAudioUtils from "./WebAudioUtils";
 
 export default class Router extends subote.Client {
   constructor(...args) {
     super(...args);
 
-    let audioContext = new AudioContext();
+    let audioContext = WebAudioUtils.getContext();
     let timeline = new Timeline({ context: audioContext, timerAPI: WorkerTimer });
 
     this.timeline = timeline;
@@ -60,5 +61,15 @@ export default class Router extends subote.Client {
     }
 
     this.socket.emit("enabled", this._enabled);
+  }
+
+  ["/play"](data) {
+    if (this.sound.state === "running") {
+      let deltaTime = data.playbackTime - (SyncDate.now() * 0.001);
+
+      data.playbackTime = this.sound.currentTime + deltaTime;
+
+      this.sound.play(data);
+    }
   }
 }

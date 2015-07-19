@@ -1,4 +1,5 @@
 import assert from "power-assert";
+import sinon from "sinon";
 import utils from "../../src/utils";
 
 let UNDEFINED;
@@ -67,6 +68,17 @@ describe("utils", () => {
       assert(closeTo(utils.midicps(67), 391.995435981, 1e-6));
       assert(closeTo(utils.midicps(69), 440.000000000, 1e-6));
       assert(closeTo(utils.midicps(71), 493.883301256, 1e-6));
+    });
+  });
+  describe("once(func: function): any", () => {
+    it("works", () => {
+      let spy = sinon.spy((a, b) => a + b);
+      let func = utils.once(spy);
+
+      assert(func(10, 20) === 30);
+      assert(func(20, 30) === 30);
+      assert(func(30, 40) === 30);
+      assert(spy.callCount === 1);
     });
   });
   describe("removeIfExists(list: any[], value: any): void", () => {

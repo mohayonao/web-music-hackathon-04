@@ -6,8 +6,16 @@ function appendIfNotExists(list, value) {
   }
 }
 
+function dbamp(db) {
+  return Math.pow(10, db * 0.05);
+}
+
 function defaults(value, defaultValue) {
   return typeof value !== "undefined" ? value : defaultValue;
+}
+
+function finedetune(x) {
+  return Math.log((x + 1000) / 1000) / Math.log(Math.pow(2, 1 / 12)) * 100;
 }
 
 function getItem(object, keys) {
@@ -31,6 +39,18 @@ function linlin(value, inMin, inMax, outMin, outMax) {
 
 function midicps(midi) {
   return 440 * Math.pow(2, (midi - 69) * 1 / 12);
+}
+
+function once(func) {
+  let done = false, result;
+
+  return function(...args) {
+    if (!done) {
+      result = func(...args);
+      done = true;
+    }
+    return result;
+  };
 }
 
 function removeIfExists(list, value) {
@@ -66,11 +86,14 @@ function setItem(object, value, keys) {
 
 export default {
   appendIfNotExists,
+  dbamp,
   defaults,
+  finedetune,
   getItem,
   linexp,
   linlin,
   midicps,
+  once,
   removeIfExists,
   sample,
   setItem,
