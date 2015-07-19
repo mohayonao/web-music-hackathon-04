@@ -1,0 +1,10 @@
+{
+  "name": "remote-keyboard-receiver",
+  "version": "0.1.0",
+  "dependencies": {
+    "@mohayonao/midi-device": "^0.4.1",
+    "osc-msg": "^0.2.2"
+  },
+  "main": "index.js",
+  "private": true
+}
