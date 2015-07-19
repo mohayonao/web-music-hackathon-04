@@ -2,23 +2,31 @@ import subote from "subote";
 import xtend from "xtend";
 import logger from "./logger";
 import utils from "./utils";
-import score from "./score";
+import score from "../utils/score";
 import Timeline from "../utils/Timeline";
 import Sequencer from "./Sequencer";
+import MIDIDelay from "./MIDIDelay";
+import MIDIDispatcher from "./MIDIDispatcher";
+import config from "./config";
 
 const INITIALIZE = Symbol("INITIALIZE");
+const COLORS = [ "dark green", "green", "light green" ];
 
 export default class Router extends subote.Server {
   constructor(...args) {
     super(...args);
 
-    this.timeline = new Timeline();
-    this.sequencer = new Sequencer(score, this.timeline);
-    this.sequencer.on("play", (events) => {
-      this._onplay(events);
+    this.timeline = new Timeline({
+      interval: 1, aheadTime: 1.25, offsetTime: 0.0,
     });
+    this.sequencer = new Sequencer(this, score);
+    this.midiDelay = new MIDIDelay(this, config.DELAY_TICKS);
+    this.midiDispatcher = new MIDIDispatcher(this);
 
     this.shared.enabledClients = [];
+    this.shared.tempo = this.sequencer.tempo;
+    this.shared.params = new Uint8Array(16);
+    this.shared.tracks = new Uint8Array(8);
 
     this[INITIALIZE]();
   }
@@ -46,6 +54,10 @@ export default class Router extends subote.Server {
         log(" ", client);
       });
       log("+", client);
+
+      client.send("/params", this.shared.params.buffer);
+
+      client.$pendings = [];
     });
 
     this.on("disconnect", ({ client }) => {
@@ -53,26 +65,99 @@ export default class Router extends subote.Server {
       log("-", client);
     });
 
+    this.sequencer.on("play", (events) => {
+      this._onplay(events);
+    });
+
+    this.sequencer.on("statechange", (state) => {
+      this.sequencer.removeAllListeners("processed");
+
+      utils.setLED("all", (state === "running") ? "light amber" : "off");
+
+      if (state !== "running") {
+        return;
+      }
+
+      let colorIndex = 0;
+
+      setTimeout(() => {
+        this.sequencer.on("processed", () => {
+          let color = utils.wrapAt(COLORS, colorIndex++);
+
+          for (let i = 0; i < 8; i++) {
+            utils.setLED(i, this.shared.tracks[i] ? color : "off");
+          }
+        });
+      }, 1000);
+    });
+
+    this.on("changeparam", (params) => {
+      this.send("/params", params.buffer);
+    });
+
+    this.timeline.on("process", () => {
+      this.clients.forEach((client) => {
+        client.$pendings = [];
+      });
+    });
+
+    this.timeline.on("processed", () => {
+      this.clients.forEach((client) => {
+        if (client.$pendings.length === 0) {
+          return;
+        }
+        client.send("/play", client.$pendings);
+      });
+    });
+
     this.timeline.start();
   }
 
   _onplay(events) {
     events.forEach((data) => {
-      this.send("/play", xtend(data, {
-        playbackTime: data.playbackTime + 1,
-      }));
+      if (data.track === 1) {
+        this.midiDelay.push(data);
+      } else {
+        this.midiDispatcher.push(xtend(data, { velocity: 60, program: 0 }));
+      }
     });
   }
 
-  ["/midi-keyboard/volume"]({ value }) {
-    this.sequencer.tempo = utils.linlin(value, 0, 127, 55, 200)|0;
+  ["/launch-control/pad"]({ track }) {
+    this.shared.tracks[track] = 1 - this.shared.tracks[track];
+    utils.setLED(track, this.shared.tracks[track] ? "light red" : "off");
   }
 
-  ["/osc/start/seq"]({ args }) {
-    if (args[0]) {
+  ["/launch-control/knob1"]({ track, value }) {
+    this.shared.params[track] = value;
+    this.emit("changeparam", this.shared.params);
+  }
+
+  ["/launch-control/knob2"]({ track, value }) {
+    this.shared.params[track + 8] = value;
+    this.emit("changeparam", this.shared.params);
+  }
+
+  ["/launch-control/cursor"]({ direction }) {
+    switch (direction) {
+    case "up":
       this.sequencer.start();
-    } else {
+      break;
+    case "down":
       this.sequencer.stop();
+      break;
+    case "left":
+      this.sequencer.tempo -= 2;
+      this.shared.tempo = this.sequencer.tempo;
+      logger.debug(`tempo: ${this.sequencer.tempo}`);
+      break;
+    case "right":
+      this.sequencer.tempo += 2;
+      this.shared.tempo = this.sequencer.tempo;
+      logger.debug(`tempo: ${this.sequencer.tempo}`);
+      break;
+    default:
+      // do nothing
     }
   }
 }
