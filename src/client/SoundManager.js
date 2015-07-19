@@ -1,8 +1,9 @@
+import PowerAudioNode from "@mohayonao/power-audio-node";
 import Sound from "./sound";
 import config from "../config";
 import utils from "./utils";
 
-global.AudioContext = global.AudioContext || global.webkitAudioContext;
+PowerAudioNode.use();
 
 export default class SoundManager {
   constructor({ audioContext, timeline }) {
@@ -15,7 +16,8 @@ export default class SoundManager {
     this._state = "suspended";
     this._chored = false;
     this._notes = [];
-    this._channels = [ [], [], [], [], [], [], [], [] ];
+    this._tracks = [ [], [], [], [], [], [], [], [] ];
+    this._numOfNotes = 0;
   }
 
   get state() {
@@ -81,22 +83,15 @@ export default class SoundManager {
   }
 
   noteOn(data, target) {
-    let { noteNumber, channel, playbackTime, duration } = data;
-
-    let note = utils.getItem(this._channels, [ channel, noteNumber ]);
-
-    if (note) {
-      note.noteOff();
-      note.dispose();
-    }
+    let { noteNumber, track, playbackTime, duration } = data;
 
     if (config.MAX_NOTES <= this._notes.length) {
       this._notes[0].noteOff();
       this._notes[0].dispose();
     }
 
-    let Klass = Sound.getClass(channel);
-    let instance = new Klass(this.audioContext, data);
+    let Klass = Sound.getClass(track);
+    let instance = new Klass(this.audioContext, this.timeline, data);
 
     instance.initialize();
     instance.noteOn(playbackTime);
@@ -111,29 +106,38 @@ export default class SoundManager {
     });
     instance.once("disposed", () => {
       utils.removeIfExists(this._notes, instance);
-      instance.disconnect();
+      instance.disconnect(target);
     });
 
-    instance.connect(target.inlet);
+    instance.connect(target);
 
     if (target === this) {
       this._notes.push(instance);
     }
 
-    utils.setItem(this._channels, instance, [ channel, noteNumber ]);
+    utils.setItem(this._tracks, instance, [ track, noteNumber ]);
   }
 
   noteOff(data) {
-    let { noteNumber, channel, playbackTime } = data;
+    let { noteNumber, track, playbackTime } = data;
+    let note = utils.getItem(this._tracks, [ track, noteNumber ]);
 
-    let instance = utils.getItem(this._channels, [ channel, noteNumber ]);
-
-    if (!instance) {
+    if (!note) {
       return;
     }
 
     this.timeline.insert(playbackTime, ({ playbackTime }) => {
-      instance.noteOff(playbackTime);
+      note.noteOff(playbackTime);
     });
+  }
+
+  __connectFrom(source) {
+    this._numOfNotes += 1;
+    source.connect(this.inlet);
+  }
+
+  __disconnectFrom(source) {
+    this._numOfNotes -= 1;
+    source.disconnect();
   }
 }

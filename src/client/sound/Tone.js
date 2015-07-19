@@ -7,10 +7,11 @@ export const NOTE_OFF = utils.symbol("NOTE_OFF");
 export const DISPOSE = utils.symbol("DISPOSE");
 
 export default class Tone extends EventEmitter {
-  constructor(audioContext, { noteNumber, velocity, duration }) {
+  constructor(audioContext, timeline, { noteNumber, velocity, duration }) {
     super();
 
     this.audioContext = audioContext;
+    this.timeline = timeline;
     this.noteNumber = noteNumber;
     this.velocity = velocity;
     this.duration = duration;
@@ -25,9 +26,9 @@ export default class Tone extends EventEmitter {
     }
   }
 
-  disconnect() {
+  disconnect(destination) {
     if (this.outlet) {
-      this.outlet.disconnect();
+      this.outlet.disconnect(destination);
     }
   }
 
@@ -67,8 +68,8 @@ export default class Tone extends EventEmitter {
     }
     this.state = "disposed";
     this[DISPOSE]();
-    this.inlet = this.outlet = null;
     this.emit("disposed");
+    this.inlet = this.outlet = null;
   }
 
   [DISPOSE]() {}
