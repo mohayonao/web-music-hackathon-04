@@ -18,6 +18,10 @@ function createColoredWave(colors) {
   return audioContext.createPeriodicWave(real, imag);
 }
 
+function createWave(wave) {
+  return audioContext.createPeriodicWave(new Float32Array(wave.real), new Float32Array(wave.imag));
+}
+
 function createPinkNoise(duration = 4, rand = Math.random) {
   let noise = new Float32Array(duration * audioContext.sampleRate);
   let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
@@ -61,6 +65,7 @@ function createWhiteNoise(duration = 4, rand = Math.random) {
 export default {
   getContext,
   createColoredWave,
+  createWave,
   createPinkNoise,
   createWhiteNoise,
 };

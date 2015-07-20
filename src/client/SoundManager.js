@@ -1,9 +1,7 @@
-import PowerAudioNode from "@mohayonao/power-audio-node";
+import xtend from "xtend";
 import Sound from "./sound";
-import config from "../config";
+import config from "./config";
 import utils from "./utils";
-
-PowerAudioNode.use();
 
 export default class SoundManager {
   constructor({ audioContext, timeline }) {
@@ -11,13 +9,15 @@ export default class SoundManager {
     this.timeline = timeline;
 
     this.inlet = audioContext.createDynamicsCompressor();
+    this.inlet.ratio.value = 9;
+    this.inlet.threshold.value = -2;
+
     this.outlet = audioContext.createGain();
 
     this._state = "suspended";
     this._chored = false;
     this._notes = [];
-    this._tracks = [ [], [], [], [], [], [], [], [] ];
-    this._numOfNotes = 0;
+    this._params = new Uint8Array(16);
   }
 
   get state() {
@@ -51,6 +51,9 @@ export default class SoundManager {
 
   start() {
     if (this.state === "suspended") {
+      this.outlet.gain.setValueAtTime(0, this.audioContext.currentTime);
+      this.outlet.gain.linearRampToValueAtTime(0.5, this.audioContext.currentTime + 0.01);
+
       this.inlet.connect(this.outlet);
       this.outlet.connect(this.audioContext.destination);
       this._state = "running";
@@ -61,83 +64,61 @@ export default class SoundManager {
 
   stop() {
     if (this.state === "running") {
-      this.inlet.disconnect();
-      this.outlet.disconnect();
+      this.outlet.gain.setValueAtTime(0.5, this.audioContext.currentTime);
+      this.outlet.gain.linearRampToValueAtTime(0, this.audioContext.currentTime + 0.01);
+      this.timeline.nextTick(() => {
+        this.inlet.disconnect();
+        this.outlet.disconnect();
+      });
       this._state = "suspended";
     }
 
     return this;
   }
 
-  play(data, target = this) {
-    if (data.dataType === "noteOn") {
-      this.timeline.insert(data.playbackTime, () => {
-        this.noteOn(data, target);
+  changeParams(params) {
+    this._params = params;
+    this._notes.forEach((note) => {
+      note.changeParams(params);
+    });
+  }
+
+  play(data) {
+    if (data.dataType === "sequence") {
+      data = xtend(data, {
+        dataType: "noteOn",
+        playbackTime: data.playbackTime + config.SEQUENCE_OFFSET_TIME,
       });
     }
-    if (data.dataType === "noteOff") {
+    if (data.dataType === "noteOn") {
       this.timeline.insert(data.playbackTime, () => {
-        this.noteOff(data, target);
+        this.noteOn(data);
       });
     }
   }
 
-  noteOn(data, target) {
-    let { noteNumber, track, playbackTime, duration } = data;
+  noteOn(data) {
+    let { track, program, playbackTime } = data;
 
-    if (config.MAX_NOTES <= this._notes.length) {
-      this._notes[0].noteOff();
-      this._notes[0].dispose();
-    }
-
-    let Klass = Sound.getClass(track);
-    let instance = new Klass(this.audioContext, this.timeline, data);
+    let Klass = Sound.getClass(track, program);
+    let instance = new Klass(this.audioContext, this.timeline, this._params, data);
+    let notes = this._notes;
 
     instance.initialize();
     instance.noteOn(playbackTime);
-
-    if (typeof duration === "number" && isFinite(duration)) {
-      instance.noteOff(playbackTime + duration);
-    }
+    instance.noteOff(playbackTime + instance.duration);
 
     instance.once("ended", () => {
-      instance.noteOff();
       instance.dispose();
     });
+
     instance.once("disposed", () => {
-      utils.removeIfExists(this._notes, instance);
-      instance.disconnect(target);
+      utils.removeIfExists(notes, instance);
+      instance.disconnect();
     });
 
-    instance.connect(target);
+    instance.connect(this.inlet);
 
-    if (target === this) {
-      this._notes.push(instance);
-    }
-
-    utils.setItem(this._tracks, instance, [ track, noteNumber ]);
-  }
-
-  noteOff(data) {
-    let { noteNumber, track, playbackTime } = data;
-    let note = utils.getItem(this._tracks, [ track, noteNumber ]);
-
-    if (!note) {
-      return;
-    }
-
-    this.timeline.insert(playbackTime, ({ playbackTime }) => {
-      note.noteOff(playbackTime);
-    });
-  }
-
-  __connectFrom(source) {
-    this._numOfNotes += 1;
-    source.connect(this.inlet);
-  }
-
-  __disconnectFrom(source) {
-    this._numOfNotes -= 1;
-    source.disconnect();
+    notes.push(instance);
   }
 }
