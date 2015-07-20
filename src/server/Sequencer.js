@@ -1,14 +1,17 @@
 import { Delegator } from "@mohayonao/dispatcher";
+import utils from "./utils";
+import config from "./config";
 
-const INTERVAL = 1;
-const TICKS_PER_BEAT = 120;
+const INTERVAL = config.SEQUENCER_INTERVAL;
+const TICKS_PER_BEAT = config.TICKS_PER_BEAT;
 
 export default class Sequencer extends Delegator {
-  constructor(score, timeline) {
+  constructor(router, score) {
     super();
 
+    this.router = router;
     this.score = score;
-    this.timeline = timeline;
+    this.timeline = router.timeline;
     this.state = "suspended";
 
     this._schedId = 0;
@@ -23,7 +26,7 @@ export default class Sequencer extends Delegator {
   }
 
   set tempo(value) {
-    this._tempo = value;
+    this._tempo = Math.max(10, Math.min(value, 1000));
   }
 
   start() {
@@ -32,18 +35,22 @@ export default class Sequencer extends Delegator {
     }
     this._schedId = this.timeline.insert(this.timeline.currentTime, this._process);
     this.state = "running";
+    this.emit("statechange", this.state);
   }
 
   stop() {
     if (this.state === "suspended") {
       return;
     }
+    this._index = 0;
+    this._ticks = 0;
     this.timeline.remove(this._schedId);
     this.state = "suspended";
+    this.emit("statechange", this.state);
   }
 
   _ticksToSeconds(ticks) {
-    return (ticks / TICKS_PER_BEAT) * (60 / this._tempo);
+    return utils.ticksToSeconds(ticks, this._tempo);
   }
 
   _process({ playbackTime }) {
@@ -67,7 +74,7 @@ export default class Sequencer extends Delegator {
     if (events.length) {
       this.emit("play", events.map((item) => {
         return {
-          dataType: "noteOn",
+          dataType: "sequence",
           playbackTime: playbackTime + this._ticksToSeconds(item.time - t0),
           track: item.track,
           noteNumber: item.noteNumber,
@@ -83,6 +90,8 @@ export default class Sequencer extends Delegator {
       this._index = 0;
       this._ticks = 0;
     }
+
+    this.emit("processed");
 
     this._schedId = this.timeline.insert(playbackTime + INTERVAL, this._process);
   }

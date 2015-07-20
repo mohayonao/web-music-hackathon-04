@@ -10,12 +10,28 @@ function dbamp(db) {
   return Math.pow(10, db * 0.05);
 }
 
+function debounce(func, wait) {
+  let timerId = 0;
+
+  return function(...args) {
+    if (timerId !== 0) {
+      clearTimeout(timerId);
+    }
+    timerId = setTimeout(() => {
+      func(...args);
+      timerId = 0;
+    }, wait);
+  };
+}
+
 function defaults(value, defaultValue) {
   return typeof value !== "undefined" ? value : defaultValue;
 }
 
-function finedetune(x) {
-  return Math.log((x + 1000) / 1000) / Math.log(Math.pow(2, 1 / 12)) * 100;
+function finedetune(fine) {
+  let sign = fine < 0 ? -1 : +1;
+
+  return sign * Math.log((Math.abs(fine) + 1000) / 1000) / Math.log(Math.pow(2, 1 / 12)) * 100;
 }
 
 function getItem(object, keys) {
@@ -61,6 +77,29 @@ function removeIfExists(list, value) {
   }
 }
 
+function removeItem(object, keys) {
+  if (keys.length === 0) {
+    return object;
+  }
+
+  for (let i = 0, imax = keys.length - 1; i < imax; i++) {
+    if (typeof object[keys[i]] === "undefined") {
+      return null;
+    }
+    object = object[keys[i]];
+  }
+
+  if (object === null || typeof object !== "object") {
+    return null;
+  }
+
+  let value = object[keys[keys.length - 1]];
+
+  delete object[keys[keys.length - 1]];
+
+  return value;
+}
+
 function sample(list) {
   return list[(Math.random() * list.length)|0];
 }
@@ -84,9 +123,20 @@ function setItem(object, value, keys) {
   return (object[keys[keys.length - 1]] = value);
 }
 
+function wrapAt(list, index) {
+  index = (index|0) % list.length;
+
+  if (index < 0) {
+    index += list.length;
+  }
+
+  return list[index];
+}
+
 export default {
   appendIfNotExists,
   dbamp,
+  debounce,
   defaults,
   finedetune,
   getItem,
@@ -95,6 +145,8 @@ export default {
   midicps,
   once,
   removeIfExists,
+  removeItem,
   sample,
   setItem,
+  wrapAt,
 };

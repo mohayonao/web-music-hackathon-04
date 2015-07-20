@@ -1,3 +1,4 @@
+import EventEmitter from "@mohayonao/event-emitter";
 import utils from "./";
 
 const DefaultContext = {
@@ -6,8 +7,10 @@ const DefaultContext = {
   },
 };
 
-export default class Timeline {
+export default class Timeline extends EventEmitter {
   constructor(opts = {}) {
+    super();
+
     this.context = utils.defaults(opts.context, DefaultContext);
     this.interval = utils.defaults(opts.interval, 0.025);
     this.aheadTime = utils.defaults(opts.aheadTime, 0.1);
@@ -110,6 +113,7 @@ export default class Timeline {
     let events = this._events;
 
     this.playbackTime = t0;
+    this.emit("process");
 
     while (events.length && events[0].time < t1) {
       let event = events.shift();
@@ -123,5 +127,6 @@ export default class Timeline {
     }
 
     this.playbackTime = t0;
+    this.emit("processed");
   }
 }

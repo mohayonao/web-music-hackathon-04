@@ -1,62 +1,56 @@
+import Envelope from "@mohayonao/envelope";
 import Tone, { INITIALIZE, NOTE_ON, NOTE_OFF, DISPOSE } from "./Tone";
+import WebAudioUtils from "../WebAudioUtils";
 import utils from "../utils";
 
-const RELEASE_TIME = 0.025;
+const ATTACK_TIME = 0.005;
+const DECAY_TIME = 0.005;
+const SUSTAIN_LEVEL = 0.75;
+const SUSTAIN_TIME = 0.050;
+let WAVE = null;
 
 export default class DelayTone extends Tone {
   [INITIALIZE]() {
-    this.volume = utils.linexp(this.velocity, 0, 127, 1e-3, 0.75);
+    if (WAVE === null) {
+      WAVE = WebAudioUtils.createColoredWave([ 1, 0, 0.125 ]);
+    }
+
+    this.duration *= utils.linlin(this.params[15], 0, 127, 0.1, 4);
+    this.volume = utils.linlin(this.velocity, 0, 127, 0, 0.85);
 
     let frequency = utils.midicps(this.noteNumber);
 
-    this.osc1 = this.audioContext.createOscillator();
-    this.osc1.type = "triangle";
-    this.osc1.frequency.value = frequency * 2;
-    this.osc1.detune.value = utils.finedetune(+4);
-
-    this.osc2 = this.audioContext.createOscillator();
-    this.osc2.type = "triangle";
-    this.osc2.frequency.value = frequency * 2;
-    this.osc2.detune.value = utils.finedetune(-4);
-
-    this.osc1.onended = () => {
+    this.osc = this.audioContext.createOscillator();
+    this.osc.setPeriodicWave(WAVE);
+    this.osc.frequency.value = frequency;
+    this.osc.detune.value = utils.finedetune(+4);
+    this.osc.onended = () => {
       this.emit("ended");
     };
 
-    this.gain = this.audioContext.createGain();
     this.releaseNode = this.audioContext.createGain();
 
-    this.osc1.connect(this.gain);
-    this.osc2.connect(this.gain);
-    this.gain.connect(this.releaseNode);
+    this.osc.connect(this.releaseNode);
 
     this.outlet = this.releaseNode;
   }
 
   [NOTE_ON](t0) {
-    this.osc1.start(t0);
-    this.osc2.start(t0);
+    let t1 = t0 + ATTACK_TIME + DECAY_TIME + SUSTAIN_TIME;
+    let t2 = t1 + this.duration;
 
-    this.gain.gain.setValueAtTime(1, t0);
-    this.gain.gain.exponentialRampToValueAtTime(1e-3, t0 + 1.5);
+    this.osc.start(t0);
+    this.osc.stop(t2);
 
-    this.releaseNode.gain.setValueAtTime(this.volume, t0);
+    Envelope.adssr(
+      ATTACK_TIME, DECAY_TIME, SUSTAIN_LEVEL, SUSTAIN_TIME, this.duration, this.volume * 0.5
+    ).applyTo(this.releaseNode.gain, t0);
   }
 
-  [NOTE_OFF](t1) {
-    let t2 = t1 + RELEASE_TIME;
-
-    this.osc1.stop(t2);
-    this.osc2.stop(t2);
-
-    this.releaseNode.gain.setValueAtTime(this.volume, t1);
-    this.releaseNode.gain.exponentialRampToValueAtTime(1e-3, t2);
-  }
+  [NOTE_OFF]() {}
 
   [DISPOSE]() {
-    this.osc1.disconnect();
-    this.osc2.disconnect();
-    this.gain.disconnect();
-    this.osc1 = this.osc2 = this.gain = this.releaseNode = null;
+    this.osc.disconnect();
+    this.osc = this.releaseNode = null;
   }
 }

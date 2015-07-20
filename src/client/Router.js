@@ -63,13 +63,21 @@ export default class Router extends subote.Client {
     this.socket.emit("enabled", this._enabled);
   }
 
+  ["/params"](buffer) {
+    this.sound.changeParams(new Uint8Array(buffer));
+  }
+
   ["/play"](data) {
     if (this.sound.state === "running") {
-      let deltaTime = data.playbackTime - (SyncDate.now() * 0.001);
+      let now = SyncDate.now() * 0.001;
 
-      data.playbackTime = this.sound.currentTime + deltaTime;
+      data.sort((a, b) => a.playbackTime - b.playbackTime).forEach((data) => {
+        let deltaTime = data.playbackTime - now;
 
-      this.sound.play(data);
+        data.playbackTime = this.sound.currentTime + deltaTime;
+
+        this.sound.play(data);
+      });
     }
   }
 }
