@@ -12,10 +12,10 @@ export default class Tone extends EventEmitter {
 
     this.audioContext = audioContext;
     this.timeline = timeline;
-    this.noteNumber = noteNumber;
-    this.velocity = velocity;
+    this.noteNumber = utils.defaults(noteNumber, 69);
+    this.velocity = utils.defaults(velocity, 100);
+    this.duration = utils.defaults(duration, Infinity);
     this.volume = 1;
-    this.duration = duration;
     this.outlet = null;
     this.inlet = null;
     this.state = "uninitialized";

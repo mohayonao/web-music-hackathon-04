@@ -9,6 +9,7 @@ const RELEASE_TIME = 0.5;
 
 export default class PlasticHarp extends Tone {
   [INITIALIZE]() {
+    this.duration = DECAY_TIME;
     this.volume = utils.linexp(this.velocity, 0, 127, 0.75, 1);
 
     let frequency = utils.midicps(this.noteNumber);
@@ -48,19 +49,20 @@ export default class PlasticHarp extends Tone {
   }
 
   [NOTE_ON](t0) {
-    let t1 = t0 + DECAY_TIME;
-    let t2 = t1 + RELEASE_TIME;
-
     this.fmsynth.start(t0);
-    this.fmsynth.stop(t2);
 
     this.releaseNode.gain.setValueAtTime(0, t0);
     this.releaseNode.gain.setValueAtTime(this.volume, t0 + 0.005);
+  }
+
+  [NOTE_OFF](t1) {
+    let t2 = t1 + RELEASE_TIME;
+
+    this.fmsynth.stop(t2);
+
     this.releaseNode.gain.setValueAtTime(this.volume, t1);
     this.releaseNode.gain.exponentialRampToValueAtTime(1e-3, t2);
   }
-
-  [NOTE_OFF]() {}
 
   [DISPOSE]() {
     this.fmsynth.disconnect();

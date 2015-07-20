@@ -10,8 +10,6 @@ function run() {
     router.click(e);
   });
 
-  window.socket = socket;
-
   return router;
 }
 

@@ -15,7 +15,7 @@ export default class DelayTone extends Tone {
       WAVE = WebAudioUtils.createColoredWave([ 1, 0, 0.125 ]);
     }
 
-    this.duration *= utils.linlin(this.params[15], 0, 127, 0.1, 4);
+    this.duration = ATTACK_TIME + DECAY_TIME + SUSTAIN_TIME;
     this.volume = utils.linlin(this.velocity, 0, 127, 0, 0.85);
 
     let frequency = utils.midicps(this.noteNumber);
@@ -36,18 +36,21 @@ export default class DelayTone extends Tone {
   }
 
   [NOTE_ON](t0) {
-    let t1 = t0 + ATTACK_TIME + DECAY_TIME + SUSTAIN_TIME;
-    let t2 = t1 + this.duration;
-
     this.osc.start(t0);
-    this.osc.stop(t2);
 
-    Envelope.adssr(
-      ATTACK_TIME, DECAY_TIME, SUSTAIN_LEVEL, SUSTAIN_TIME, this.duration, this.volume * 0.5
+    Envelope.ads(
+      ATTACK_TIME, DECAY_TIME, SUSTAIN_LEVEL, this.volume * 0.5
     ).applyTo(this.releaseNode.gain, t0);
   }
 
-  [NOTE_OFF]() {}
+  [NOTE_OFF](t1) {
+    let t2 = t1 + utils.linlin(this.params[15], 0, 127, 0.1, 4);
+
+    this.osc.stop(t2);
+
+    this.releaseNode.gain.setValueAtTime(this.volume * 0.5, t1);
+    this.releaseNode.gain.exponentialRampToValueAtTime(1e-3, t2);
+  }
 
   [DISPOSE]() {
     this.osc.disconnect();

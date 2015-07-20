@@ -4,9 +4,10 @@ import config from "./config";
 import utils from "./utils";
 
 export default class SoundManager {
-  constructor({ audioContext, timeline }) {
+  constructor({ audioContext, timeline, offsetTime }) {
     this.audioContext = audioContext;
     this.timeline = timeline;
+    this.offsetTime = utils.defaults(offsetTime, 0);
 
     this.inlet = audioContext.createDynamicsCompressor();
     this.inlet.ratio.value = 9;
@@ -17,7 +18,8 @@ export default class SoundManager {
     this._state = "suspended";
     this._chored = false;
     this._notes = [];
-    this._params = new Uint8Array(16);
+    this._tracks = [ [], [], [], [], [], [], [], [] ];
+    this._params = new Uint8Array(config.DEFAULT_PARAMS);
   }
 
   get state() {
@@ -87,26 +89,38 @@ export default class SoundManager {
     if (data.dataType === "sequence") {
       data = xtend(data, {
         dataType: "noteOn",
-        playbackTime: data.playbackTime + config.SEQUENCE_OFFSET_TIME,
+        playbackTime: data.playbackTime + this.offsetTime,
       });
+    }
+    if (data.playbackTime <= 0) {
+      data.playbackTime = this.audioContext.currentTime;
     }
     if (data.dataType === "noteOn") {
       this.timeline.insert(data.playbackTime, () => {
         this.noteOn(data);
       });
     }
+    if (data.dataType === "noteOff") {
+      this.timeline.insert(data.playbackTime, () => {
+        this.noteOff(data);
+      });
+    }
   }
 
   noteOn(data) {
-    let { track, program, playbackTime } = data;
+    let { noteNumber, track, program, playbackTime } = data;
 
-    let Klass = Sound.getClass(track, program);
+    let Klass = Sound.getClass({ track, program });
     let instance = new Klass(this.audioContext, this.timeline, this._params, data);
     let notes = this._notes;
 
     instance.initialize();
     instance.noteOn(playbackTime);
-    instance.noteOff(playbackTime + instance.duration);
+    if (instance.duration !== Infinity) {
+      instance.noteOff(playbackTime + instance.duration);
+    } else {
+      this._tracks[track][noteNumber] = instance;
+    }
 
     instance.once("ended", () => {
       instance.dispose();
@@ -120,5 +134,18 @@ export default class SoundManager {
     instance.connect(this.inlet);
 
     notes.push(instance);
+  }
+
+  noteOff(data) {
+    let { noteNumber, track, playbackTime } = data;
+    let instance = this._tracks[track][noteNumber];
+
+    if (!instance) {
+      return;
+    }
+
+    instance.noteOff(playbackTime);
+
+    this._tracks[track][noteNumber] = null;
   }
 }

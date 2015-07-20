@@ -1,0 +1,109 @@
+.container {
+  font-family: "Roboto", sans-serif;
+}
+
+.app {
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
+.btn {
+  outline: 0 !important;
+  box-shadow: none !important;
+  border-color: #ccc !important;
+}
+
+.btn-toggle {
+  width: 150px;
+  margin-right: 5px;
+}
+
+.form-control {
+  margin: 2px 0;
+}
+
+.midi-device-selector {
+  width: 305px !important;
+  margin-right: 5px;
+}
+
+.launch-control {
+  margin: 5px 0;
+  padding: 5px 0;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
+.launch-control-track-container {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.launch-control-track {
+  display: inline-block;
+  width: 58px;
+}
+
+.launch-control-knob {
+  width: 42px;
+  height: 42px;
+  border-radius: 21px;
+  margin: 10px auto;
+  padding-top: 12px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.launch-control-pad {
+  width: 42px;
+  height: 42px;
+  border-radius: 8px;
+  margin: 10px auto;
+  padding-top: 12px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.midi-keyboard {
+  margin: 5px 0;
+  padding: 5px 0;
+}
+
+.midi-keyboard-preset-selector {
+  width: 305px !important;
+  margin-right: 5px;
+}
+
+.midi-keyboard-controller {
+  float: left;
+  display: inline-block;
+  width: 40px;
+  text-align: center;
+}
+
+.midi-keyboard-container {
+  display: inline-block;
+  list-style: none;
+  padding: 0;
+}
+
+.midi-keyboard-key {
+  float: left;
+  display: inline-block;
+  width: 35px;
+}
+
+.midi-keyboard-pad {
+  width: 32px;
+  height: 48px;
+  border-radius: 8px;
+  margin: 10px auto;
+  padding-top: 7px;
+  text-align: center;
+  cursor: pointer;
+}
