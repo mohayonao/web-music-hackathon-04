@@ -92,10 +92,6 @@ function setLED(track, color) {
   }
 }
 
-function ticksToSeconds(ticks, tempo) {
-  return (ticks / config.TICKS_PER_BEAT) * (60 / tempo);
-}
-
 export default xtend(utils, {
   dispatcher,
   useLaunchControl: utils.once(useLaunchControl),
@@ -103,5 +99,4 @@ export default xtend(utils, {
   useOSCReceiver: utils.once(useOSCReceiver),
   sendOSC: sendOSC,
   setLED: setLED,
-  ticksToSeconds: ticksToSeconds,
 });
