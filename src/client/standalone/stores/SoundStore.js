@@ -1,11 +1,11 @@
 import xtend from "xtend";
 import WorkerTimer from "worker-timer";
 import Store from "./Store";
-import SoundManager from "../../../SoundManager";
-import score from "../../../../utils/score";
-import Timeline from "../../../../utils/Timeline";
-import Sequencer from "../../../../utils/Sequencer";
-import WebAudioUtils from "../../../WebAudioUtils";
+import SoundManager from "../../SoundManager";
+import score from "../../../utils/score";
+import Timeline from "../../../utils/Timeline";
+import Sequencer from "../../../utils/Sequencer";
+import WebAudioUtils from "../../../utils/WebAudioUtils";
 import config from "../config";
 
 export default class SoundStore extends Store {

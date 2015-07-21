@@ -3,7 +3,7 @@ import FMSynth from "@mohayonao/fm-synth";
 import Envelope from "@mohayonao/envelope";
 import Tone, { INITIALIZE, NOTE_ON, NOTE_OFF, DISPOSE } from "./Tone";
 import utils from "../utils";
-import WebAudioUtils from "../WebAudioUtils";
+import WebAudioUtils from "../utils/WebAudioUtils";
 
 const RELEASE_TIME = 2.5;
 

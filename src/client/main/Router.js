@@ -1,9 +1,9 @@
 import subote from "subote";
 import WorkerTimer from "worker-timer";
-import SoundManager from "../../SoundManager";
-import SyncDate from "../../SyncDate";
-import Timeline from "../../../utils/Timeline";
-import WebAudioUtils from "../../WebAudioUtils";
+import SoundManager from "../SoundManager";
+import SyncDate from "../SyncDate";
+import Timeline from "../../utils/Timeline";
+import WebAudioUtils from "../../utils/WebAudioUtils";
 import config from "./config";
 
 export default class Router extends subote.Client {

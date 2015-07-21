@@ -1,6 +1,6 @@
 import Envelope from "@mohayonao/envelope";
 import Tone, { INITIALIZE, NOTE_ON, NOTE_OFF, DISPOSE } from "./Tone";
-import WebAudioUtils from "../WebAudioUtils";
+import WebAudioUtils from "../utils/WebAudioUtils";
 import utils from "../utils";
 
 let NOISE = null;

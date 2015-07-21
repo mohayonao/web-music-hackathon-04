@@ -4,7 +4,7 @@ let audioContext = null;
 
 function getContext() {
   if (audioContext === null) {
-    audioContext = new AudioContext();
+    audioContext = new global.AudioContext();
   }
   return audioContext;
 }

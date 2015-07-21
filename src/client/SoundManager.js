@@ -1,5 +1,5 @@
 import xtend from "xtend";
-import Sound from "./sound";
+import Sound from "../sound";
 import config from "./config";
 import utils from "./utils";
 
