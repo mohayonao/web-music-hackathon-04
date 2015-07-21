@@ -1,12 +1,10 @@
 import dateformat from "dateformat";
 import colors from "colors";
 
-/* eslint-disable no-console */
-
 function log(fmt, args) {
   let text = "[" + dateformat(new Date(), "HH:MM:ss") + "] " + fmt;
 
-  console.log(text, ...args);
+  global.console.log(text, ...args);
 }
 
 export default {
