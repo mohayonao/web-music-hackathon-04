@@ -11,6 +11,5 @@ export default xtend(config, {
   MIDI_KEYBOARD_NAME: "Keystation Mini 32",
   MIDI_CONTROLLER_NAME: "Launch Control",
   SEQUENCER_INTERVAL: 1,
-  TICKS_PER_BEAT: 120,
   DELAY_TICKS: 90,
 });

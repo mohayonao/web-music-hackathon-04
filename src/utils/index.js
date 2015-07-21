@@ -123,6 +123,10 @@ function setItem(object, value, keys) {
   return (object[keys[keys.length - 1]] = value);
 }
 
+function symbol(str) {
+  return typeof Symbol !== "undefined" ? Symbol(str) : (str + Date.now());
+}
+
 function wrapAt(list, index) {
   index = (index|0) % list.length;
 
@@ -148,5 +152,6 @@ export default {
   removeItem,
   sample,
   setItem,
+  symbol,
   wrapAt,
 };

@@ -1,5 +1,6 @@
 import xtend from "xtend";
 import utils from "./utils";
+import config from "./config";
 
 export default class MIDIDelay {
   constructor(router, delayTicks) {
@@ -18,6 +19,10 @@ export default class MIDIDelay {
     this._process(xtend(data, { velocity: 80, program: 0, clientIndex: this.clientIndex++ }));
   }
 
+  _ticksToSeconds(ticks, tempo) {
+    return (ticks / config.TICKS_PER_BEAT) * (60 / tempo);
+  }
+
   _process(data) {
     let client = utils.wrapAt(this.router.shared.enabledClients, data.clientIndex++);
 
@@ -27,7 +32,7 @@ export default class MIDIDelay {
 
     client.$pendings.push(data);
 
-    let delay = utils.ticksToSeconds(this.delayTicks, this.router.shared.tempo);
+    let delay = this._ticksToSeconds(this.delayTicks, this.router.shared.tempo);
 
     this.timeline.insert(data.playbackTime + delay, ({ playbackTime }) => {
       let velocity = (data.velocity * this.feedback)|0;

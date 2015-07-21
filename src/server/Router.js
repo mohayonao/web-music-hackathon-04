@@ -28,7 +28,7 @@ export default class Router extends subote.Server {
 
     this.shared.enabledClients = [];
     this.shared.tempo = this.sequencer.tempo;
-    this.shared.params = new Uint8Array(16);
+    this.shared.params = new Uint8Array(config.DEFAULT_PARAMS);
     this.shared.tracks = new Uint8Array(8);
 
     this[INITIALIZE]();
