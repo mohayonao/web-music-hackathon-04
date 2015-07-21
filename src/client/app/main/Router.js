@@ -1,19 +1,27 @@
 import subote from "subote";
 import WorkerTimer from "worker-timer";
-import SoundManager from "./SoundManager";
-import SyncDate from "./SyncDate";
-import Timeline from "../utils/Timeline";
-import WebAudioUtils from "./WebAudioUtils";
+import SoundManager from "../../SoundManager";
+import SyncDate from "../../SyncDate";
+import Timeline from "../../../utils/Timeline";
+import WebAudioUtils from "../../WebAudioUtils";
+import config from "./config";
 
 export default class Router extends subote.Client {
   constructor(...args) {
     super(...args);
 
     let audioContext = WebAudioUtils.getContext();
-    let timeline = new Timeline({ context: audioContext, timerAPI: WorkerTimer });
+    let timeline = new Timeline({
+      context: audioContext,
+      timerAPI: WorkerTimer,
+    });
 
     this.timeline = timeline;
-    this.sound = new SoundManager({ audioContext, timeline });
+    this.sound = new SoundManager({
+      audioContext,
+      timeline,
+      offsetTime: config.SEQUENCE_OFFSET_TIME,
+    });
 
     this._enabled = false;
     this._syncTimes = [];

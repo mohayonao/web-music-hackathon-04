@@ -4,7 +4,7 @@ import logger from "./logger";
 import utils from "./utils";
 import score from "../utils/score";
 import Timeline from "../utils/Timeline";
-import Sequencer from "./Sequencer";
+import Sequencer from "../utils/Sequencer";
 import MIDIDelay from "./MIDIDelay";
 import MIDIDispatcher from "./MIDIDispatcher";
 import config from "./config";
@@ -19,7 +19,10 @@ export default class Router extends subote.Server {
     this.timeline = new Timeline({
       interval: 1, aheadTime: 1.25, offsetTime: 0.0,
     });
-    this.sequencer = new Sequencer(this, score);
+    this.sequencer = new Sequencer(this, score, {
+      interval: config.SEQUENCER_INTERVAL,
+      ticksPerBeat: config.TICKS_PER_BEAT,
+    });
     this.midiDelay = new MIDIDelay(this, config.DELAY_TICKS);
     this.midiDispatcher = new MIDIDispatcher(this);
 

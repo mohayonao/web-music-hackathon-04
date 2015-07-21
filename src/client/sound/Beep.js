@@ -7,6 +7,7 @@ const RELEASE_TIME = 0.01;
 export default class Beep extends Tone {
   [INITIALIZE]() {
     this.volume = 1;
+    this.duration = DECAY_TIME;
 
     this.osc = this.audioContext.createOscillator();
     this.osc.frequency.value = utils.midicps((this.noteNumber % 12) + 60) * 8;
@@ -22,18 +23,19 @@ export default class Beep extends Tone {
   }
 
   [NOTE_ON](t0) {
-    let t1 = t0 + DECAY_TIME;
-    let t2 = t1 + RELEASE_TIME;
-
     this.osc.start(t0);
-    this.osc.stop(t2);
 
     this.releaseNode.gain.setValueAtTime(this.volume, t0);
+  }
+
+  [NOTE_OFF](t1) {
+    let t2 = t1 + RELEASE_TIME;
+
+    this.osc.stop(t2);
+
     this.releaseNode.gain.setValueAtTime(this.volume, t1);
     this.releaseNode.gain.exponentialRampToValueAtTime(1e-3, t2);
   }
-
-  [NOTE_OFF]() {}
 
   [DISPOSE]() {
     this.osc.disconnect();

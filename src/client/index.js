@@ -1,3 +1,5 @@
-import main from "./main";
+import "./react";
+import main from "./app/main";
+import standalone from "./app/standalone";
 
-export default { main };
+export default { main, standalone };

@@ -8,6 +8,7 @@ const RELEASE_TIME = 13.000;
 
 export default class TublarBell extends Tone {
   [INITIALIZE]() {
+    this.duration = 1;
     this.volume = utils.linexp(this.velocity, 0, 127, 0.25, 1);
 
     let frequency = utils.midicps(this.noteNumber - 2);
@@ -45,17 +46,18 @@ export default class TublarBell extends Tone {
   }
 
   [NOTE_ON](t0) {
-    let t1 = t0 + 1;
+    this.fmsynth.start(t0);
+    this.releaseNode.gain.setValueAtTime(this.volume * utils.dbamp(-22), t0);
+  }
+
+  [NOTE_OFF](t1) {
     let t2 = t1 + RELEASE_TIME;
 
-    this.fmsynth.start(t0);
     this.fmsynth.stop(t2);
-    this.releaseNode.gain.setValueAtTime(this.volume * utils.dbamp(-22), t0);
+
     this.releaseNode.gain.setValueAtTime(this.volume * utils.dbamp(-22), t1);
     this.releaseNode.gain.exponentialRampToValueAtTime(1e-3, t2);
   }
-
-  [NOTE_OFF]() {}
 
   [DISPOSE]() {
     this.fmsynth.disconnect();

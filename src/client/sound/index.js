@@ -10,10 +10,9 @@ import SweepPad from "./SweepPad";
 import TublarBell from "./TublarBell";
 import TwinklePad from "./TwinklePad";
 import WindMachine from "./WindMachine";
-
 import utils from "../utils";
 
-export default {
+let presets = {
   Beep,
   DelayTone,
   Distorted,
@@ -26,20 +25,33 @@ export default {
   TublarBell,
   TwinklePad,
   WindMachine,
-  getClass() {
-    return utils.sample([
-      // Beep,
-      DelayTone,
-      // Distorted,
-      // FMPiano,
-      // PlasticHarp,
-      // PureVibes,
-      // SineTone,
-      // SquareLead,
-      // SweepPad,
-      // TublarBell,
-      // TwinklePad,
-      // WindMachine,
-    ]);
-  },
+};
+
+function getClass({ track, program }) {
+  if (track === 0) {
+    if (!presets.hasOwnProperty(program)) {
+      program = utils.sample(Object.keys(presets));
+    }
+    return presets[program];
+  }
+
+  return utils.sample([
+    Beep,
+    DelayTone,
+    Distorted,
+    FMPiano,
+    PlasticHarp,
+    PureVibes,
+    SineTone,
+    SquareLead,
+    SweepPad,
+    TublarBell,
+    TwinklePad,
+    WindMachine,
+  ]);
+}
+
+export default {
+  presets,
+  getClass,
 };
