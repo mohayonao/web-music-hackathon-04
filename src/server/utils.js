@@ -21,7 +21,10 @@ function useLaunchControl() {
 
   launchControl.open().then(() => {
     launchControl.led("all", "off", 8);
-    logger.info("@ %s", launchControl.deviceName);
+    dispatcher.dispatch("/midi-device/connect/launch-control", {
+      deviceName: launchControl.deviceName,
+    });
+    logger.info(`MIDIController: ${launchControl.deviceName}`);
   }).catch((e) => {
     logger.error(e.message);
   });
@@ -38,7 +41,10 @@ function useMIDIKeyboard() {
   });
 
   midiKeyboard.open().then(() => {
-    logger.info("@ %s", midiKeyboard.deviceName);
+    dispatcher.dispatch("/midi-device/connect/midi-keyboard", {
+      deviceName: midiKeyboard.deviceName,
+    });
+    logger.info(`MIDIKeyboard: ${midiKeyboard.deviceName}`);
   }).catch((e) => {
     logger.error(e.message);
   });
