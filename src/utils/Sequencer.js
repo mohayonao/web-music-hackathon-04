@@ -1,18 +1,17 @@
 import { Delegator } from "@mohayonao/dispatcher";
-import utils from "./utils";
-import config from "./config";
-
-const INTERVAL = config.SEQUENCER_INTERVAL;
-const TICKS_PER_BEAT = config.TICKS_PER_BEAT;
+import utils from "./";
 
 export default class Sequencer extends Delegator {
-  constructor(router, score) {
+  constructor(router, score, opts={}) {
     super();
 
     this.router = router;
     this.score = score;
     this.timeline = router.timeline;
     this.state = "suspended";
+
+    this._interval = utils.defaults(opts.interval, 1);
+    this._ticksPerBeat = utils.defaults(opts.ticksPerBeat, 120);
 
     this._schedId = 0;
     this._index = 0;
@@ -50,11 +49,11 @@ export default class Sequencer extends Delegator {
   }
 
   _ticksToSeconds(ticks) {
-    return utils.ticksToSeconds(ticks, this._tempo);
+    return (ticks / this._ticksPerBeat) * (60 / this._tempo);
   }
 
   _process({ playbackTime }) {
-    let ticks = Math.round((this._tempo / 60) * TICKS_PER_BEAT);
+    let ticks = (this._tempo / 60) * this._ticksPerBeat * this._interval;
     let t0 = this._ticks;
     let t1 = t0 + ticks;
     let events = [];
@@ -93,6 +92,6 @@ export default class Sequencer extends Delegator {
 
     this.emit("processed");
 
-    this._schedId = this.timeline.insert(playbackTime + INTERVAL, this._process);
+    this._schedId = this.timeline.insert(playbackTime + this._interval, this._process);
   }
 }
