@@ -34,8 +34,13 @@ export default class MIDIKeyboardStore extends Store {
     }
   }
 
-  ["/midi-keyboard/connected"]({ deviceName }) {
-    this.data.connectedDeviceName = deviceName;
+  ["/midi-keyboard/noteOn"](data) {
+    this.data.noteOn[data.noteNumber] = 1;
+    this.emitChange();
+  }
+
+  ["/midi-keyboard/noteOff"](data) {
+    this.data.noteOn[data.noteNumber] = 0;
     this.emitChange();
   }
 
@@ -49,43 +54,8 @@ export default class MIDIKeyboardStore extends Store {
     this.emitChange();
   }
 
-  ["/midi-keyboard/noteOn"](data) {
-    let { sound } = this.router;
-
-    if (sound.state !== "running") {
-      return;
-    }
-
-    sound.play({
-      dataType: "noteOn",
-      playbackTime: 0,
-      track: 0,
-      program: this.data.presetName,
-      noteNumber: data.noteNumber,
-      velocity: data.velocity,
-    });
-
-    this.data.noteOn[data.noteNumber] = 1;
-    this.emitChange();
-  }
-
-  ["/midi-keyboard/noteOff"](data) {
-    let { sound } = this.router;
-
-    if (sound.state !== "running") {
-      return;
-    }
-
-    sound.play({
-      dataType: "noteOff",
-      playbackTime: 0,
-      track: 0,
-      program: this.data.presetName,
-      noteNumber: data.noteNumber,
-      velocity: 0,
-    });
-
-    this.data.noteOn[data.noteNumber] = 0;
+  ["/midi-device/connected/midi-keyboard"]({ deviceName }) {
+    this.data.connectedDeviceName = deviceName;
     this.emitChange();
   }
 }

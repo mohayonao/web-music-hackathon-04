@@ -4,7 +4,7 @@ export default class LaunchControlPad extends React.Component {
   constructor(...args) {
     super(...args);
 
-    this._onMouseDown = this._onMouseDown.bind(this);
+    this.$onMouseDown = this.$onMouseDown.bind(this);
   }
 
   render() {
@@ -12,13 +12,13 @@ export default class LaunchControlPad extends React.Component {
     let styles = data.active ? STYLES.ACTIVE : STYLES.NORMAL;
 
     return (
-      <div onMouseDown={ this._onMouseDown } className="launch-control-pad" style={ styles }>
+      <div onMouseDown={ this.$onMouseDown } className="launch-control-pad" style={ styles }>
         { data.value }
       </div>
     );
   }
 
-  _onMouseDown() {
+  $onMouseDown() {
     let { router, data } = this.props;
 
     router.createAction("/launch-control", {

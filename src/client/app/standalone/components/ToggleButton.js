@@ -4,7 +4,7 @@ export default class ToggleButton extends React.Component {
   constructor(...args) {
     super(...args);
 
-    this._onClick = this._onClick.bind(this);
+    this.$onClick = this.$onClick.bind(this);
   }
 
   render() {
@@ -13,13 +13,13 @@ export default class ToggleButton extends React.Component {
     let styles = data.value ? STYLES.ON : STYLES.OFF;
 
     return (
-      <button onClick={ this._onClick } className="btn btn-default btn-toggle" style={ styles }>
+      <button onClick={ this.$onClick } className="btn btn-default btn-toggle" style={ styles }>
         { caption }
       </button>
     );
   }
 
-  _onClick(e) {
+  $onClick(e) {
     let { router, data } = this.props;
 
     if (typeof this.props.action === "function") {

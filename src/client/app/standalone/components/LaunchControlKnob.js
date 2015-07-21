@@ -1,36 +1,43 @@
 import STYLES from "./styles";
+import MouseHandler from "./MouseHandler";
 
 export default class LaunchControlKnob extends React.Component {
   constructor(...args) {
     super(...args);
 
-    this._onMouseDown = this._onMouseDown.bind(this);
+    this.$onMouseDown = this.$onMouseDown.bind(this);
   }
 
   render() {
     let { data } = this.props;
-    let styles = data.active ? STYLES.ACTIVE : STYLES.NORMAL;
+    let styles;
+
+    if (data.active) {
+      styles = STYLES.ACTIVE;
+    } else if (data.enabled) {
+      styles = STYLES.ENABLED;
+    } else {
+      styles = STYLES.NORMAL;
+    }
 
     return (
-      <div onMouseDown={ this._onMouseDown } className="launch-control-knob" style={ styles }>
+      <div onMouseDown={ this.$onMouseDown } className="launch-control-knob" style={ styles }>
         { data.value }
       </div>
     );
   }
 
-  _onMouseDown() {
+  $onMouseDown() {
     let { router, data } = this.props;
 
-    router.createAction("/mouse/down", {
-      target: this,
-      action: "knobActive",
-    });
+    MouseHandler.set(this);
+
     router.createAction("/launch-control/knob/active", {
       track: data.track, index: data.index,
     });
   }
 
-  _onMouseMove({ dy }) {
+  $onMouseMove({ dy }) {
     let { router, data } = this.props;
 
     router.createAction("/launch-control/knob/update", {
@@ -38,7 +45,7 @@ export default class LaunchControlKnob extends React.Component {
     });
   }
 
-  _onMouseUp() {
+  $onMouseUp() {
     let { router, data } = this.props;
 
     router.createAction("/launch-control/knob/deactive", {

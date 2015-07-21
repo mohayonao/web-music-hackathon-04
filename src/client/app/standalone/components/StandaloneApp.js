@@ -8,7 +8,7 @@ export default class StandaloneApp extends React.Component {
 
     this.state = this.getStateFromStores();
 
-    this._onChange = this._onChange.bind(this);
+    this.$onChange = this.$onChange.bind(this);
   }
 
   getStateFromStores() {
@@ -20,13 +20,13 @@ export default class StandaloneApp extends React.Component {
   componentWillMount() {
     let { router } = this.props;
 
-    router.addChangeListener(this._onChange);
+    router.addChangeListener(this.$onChange);
   }
 
   componentWillUnmount() {
     let { router } = this.props;
 
-    router.removeChangeListener(this._onChange);
+    router.removeChangeListener(this.$onChange);
   }
 
   render() {
@@ -63,7 +63,7 @@ export default class StandaloneApp extends React.Component {
     );
   }
 
-  _onChange() {
+  $onChange() {
     this.setState(this.getStateFromStores());
   }
 }

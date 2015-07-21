@@ -6,4 +6,8 @@ export default class Action extends Delegator {
 
     this.router = router;
   }
+
+  executeAction(address, data) {
+    this.router.executeAction(address, data);
+  }
 }

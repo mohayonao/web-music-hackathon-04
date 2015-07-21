@@ -6,8 +6,8 @@ export default class MIDIDeviceSelector extends React.Component {
   constructor(...args) {
     super(...args);
 
-    this._onChange = this._onChange.bind(this);
-    this._onClick = this._onClick.bind(this);
+    this.$onChange = this.$onChange.bind(this);
+    this.$onClick = this.$onClick.bind(this);
   }
 
   render() {
@@ -25,15 +25,15 @@ export default class MIDIDeviceSelector extends React.Component {
 
     return (
       <div className="form-inline">
-        <select value={ data.deviceName || DEFAULT } onChange={ this._onChange } className="form-control midi-device-selector">
+        <select value={ data.deviceName || DEFAULT } onChange={ this.$onChange } className="form-control midi-device-selector">
           { options }
         </select>
-        <ToggleButton router={ router } data={ buttonData } action={ this._onClick } />
+        <ToggleButton router={ router } data={ buttonData } action={ this.$onClick } />
       </div>
     );
   }
 
-  _onChange(e) {
+  $onChange(e) {
     let { router } = this.props;
     let selectedIndex = e.target.options.selectedIndex;
 
@@ -43,7 +43,7 @@ export default class MIDIDeviceSelector extends React.Component {
     });
   }
 
-  _onClick() {
+  $onClick() {
     let { router, data } = this.props;
 
     if (!data.deviceName || data.deviceName === DEFAULT) {

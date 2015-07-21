@@ -16,11 +16,15 @@ export default class Store extends Delegator {
     return {};
   }
 
-  get() {
+  getState() {
     return this.data;
   }
 
   emitChange() {
     this.router.emitChange();
+  }
+
+  dispatch(address, data = {}) {
+    this.router.executeAction(address, data);
   }
 }

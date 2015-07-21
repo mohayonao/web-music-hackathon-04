@@ -22,6 +22,13 @@ export default class Tone extends EventEmitter {
     this.params = params;
   }
 
+  static getEnabledParams() {
+    return [
+      0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0,
+    ];
+  }
+
   connect(destination) {
     if (this.outlet) {
       this.outlet.connect(destination);

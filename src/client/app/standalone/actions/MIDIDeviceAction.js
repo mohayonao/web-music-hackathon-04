@@ -7,13 +7,13 @@ let devices = {};
 export default class MIDIDeviceAction extends Action {
   ["/midi-device/request"]() {
     MIDIKeyboard.requestDeviceNames().then(({ inputs, outputs }) => {
-      this.router.executeAction("/midi-device/request/inputs", { inputs });
-      this.router.executeAction("/midi-device/request/outputs", { outputs });
+      this.executeAction("/midi-device/request/inputs", { inputs });
+      this.executeAction("/midi-device/request/outputs", { outputs });
     });
   }
 
   ["/midi-device/select"]({ target, deviceName }) {
-    this.router.executeAction(`/midi-device/select/${target}`, { deviceName });
+    this.executeAction(`/midi-device/select/${target}`, { deviceName });
   }
 
   ["/midi-device/connect"]({ target, deviceName }) {
@@ -36,12 +36,12 @@ export default class MIDIDeviceAction extends Action {
       device.open().then(() => {
         devices[target] = device;
 
-        this.router.executeAction(`/${target}/connected`, {
+        this.executeAction(`/midi-device/connected/${target}`, {
           deviceName: device.deviceName,
         });
 
         device.on("message", (data) => {
-          this.router.executeAction(`/${target}/${data.dataType}`, data);
+          this.executeAction(`/${target}/${data.dataType}`, data);
         });
       }).catch((e) => {
         global.console.error(e);

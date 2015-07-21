@@ -10,6 +10,13 @@ const SUSTAIN_TIME = 0.050;
 let WAVE = null;
 
 export default class DelayTone extends Tone {
+  static getEnabledParams() {
+    return [
+      0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 1,
+    ];
+  }
+
   [INITIALIZE]() {
     if (WAVE === null) {
       WAVE = WebAudioUtils.createColoredWave([ 1, 0, 0.125 ]);

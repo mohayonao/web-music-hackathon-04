@@ -4,7 +4,7 @@ export default {
     backgroundColor: "#C8EFEA",
   },
   ENABLED: {
-    color: "#FFFFFF",
+    color: "#004039",
     backgroundColor: "#68CFC3",
   },
   ACTIVE: {
