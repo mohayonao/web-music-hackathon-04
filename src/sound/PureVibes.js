@@ -1,13 +1,15 @@
 import Operator from "@mohayonao/operator";
 import FMSynth from "@mohayonao/fm-synth";
 import Envelope from "@mohayonao/envelope";
-import Tone, { INITIALIZE, NOTE_ON, NOTE_OFF, DISPOSE } from "./Tone";
+import Tone, { INITIALIZE, CREATE, NOTE_ON, NOTE_OFF, DISPOSE } from "./Tone";
 import utils from "../utils";
 
-export default class PureVibes extends Tone {
-  [INITIALIZE]() {
-    this.volume = utils.linexp(this.velocity, 0, 127, 0.5, 1);
+const GAIN_UP = 1.25;
 
+export default class PureVibes extends Tone {
+  [INITIALIZE]() {}
+
+  [CREATE]() {
     let frequency = utils.midicps(this.noteNumber);
     let opA = new Operator(this.audioContext);
     let opB = new Operator(this.audioContext);
@@ -38,7 +40,7 @@ export default class PureVibes extends Tone {
   [NOTE_ON](t0) {
     this.startTime = t0;
     this.fmsynth.start(t0);
-    this.releaseNode.gain.setValueAtTime(this.volume, t0);
+    this.releaseNode.gain.setValueAtTime(this.volume * GAIN_UP, t0);
   }
 
   [NOTE_OFF](t1) {
@@ -46,7 +48,7 @@ export default class PureVibes extends Tone {
 
     this.fmsynth.stop(t2);
 
-    this.releaseNode.gain.setValueAtTime(this.volume, t1);
+    this.releaseNode.gain.setValueAtTime(this.volume * GAIN_UP, t1);
     this.releaseNode.gain.exponentialRampToValueAtTime(1e-3, t2);
   }
 

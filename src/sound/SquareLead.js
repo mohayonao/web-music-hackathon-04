@@ -1,15 +1,16 @@
 import Operator from "@mohayonao/operator";
 import FMSynth from "@mohayonao/fm-synth";
 import Envelope from "@mohayonao/envelope";
-import Tone, { INITIALIZE, NOTE_ON, NOTE_OFF, DISPOSE } from "./Tone";
+import Tone, { INITIALIZE, CREATE, NOTE_ON, NOTE_OFF, DISPOSE } from "./Tone";
 import utils from "../utils";
 
 const RELEASE_TIME = 0.050;
+const GAIN_UP = 0.5;
 
 export default class SquareLead extends Tone {
-  [INITIALIZE]() {
-    this.volume = utils.linexp(this.velocity, 0, 127, 1e-3, 0.5);
+  [INITIALIZE]() {}
 
+  [CREATE]() {
     let frequency = utils.midicps(this.noteNumber);
     let opA = new Operator(this.audioContext);
     let opB = new Operator(this.audioContext);
@@ -50,14 +51,14 @@ export default class SquareLead extends Tone {
 
   [NOTE_ON](t0) {
     this.synth.start(t0);
-    this.releaseNode.gain.setValueAtTime(this.volume, t0);
+    this.releaseNode.gain.setValueAtTime(this.volume * GAIN_UP, t0);
   }
 
   [NOTE_OFF](t1) {
     let t2 = t1 + RELEASE_TIME;
 
     this.synth.stop(t2);
-    this.releaseNode.gain.setValueAtTime(this.volume, t1);
+    this.releaseNode.gain.setValueAtTime(this.volume * GAIN_UP, t1);
     this.releaseNode.gain.exponentialRampToValueAtTime(1e-3, t2);
   }
 

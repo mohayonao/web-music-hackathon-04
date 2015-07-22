@@ -1,19 +1,21 @@
 import Operator from "@mohayonao/operator";
 import FMSynth from "@mohayonao/fm-synth";
 import Envelope from "@mohayonao/envelope";
-import Tone, { INITIALIZE, NOTE_ON, NOTE_OFF, DISPOSE } from "./Tone";
+import Tone, { INITIALIZE, CREATE, NOTE_ON, NOTE_OFF, DISPOSE } from "./Tone";
 import utils from "../utils";
 
-let CUTOFF_VALUES = new Float32Array(1024);
-
-for (let i = 0; i < 1024; i++) {
-  CUTOFF_VALUES[i] = utils.linexp(Math.random(), 0, 1, 1000, 8000);
-}
+const GAIN_UP = 0.5;
 
 export default class TwinklePad extends Tone {
   [INITIALIZE]() {
-    this.volume = utils.linexp(this.velocity, 0, 127, 0.05, 0.75);
+    this.cutoffValues = new Float32Array(1024);
 
+    for (let i = 0; i < 1024; i++) {
+      this.cutoffValues[i] = utils.linexp(Math.random(), 0, 1, 1000, 8000);
+    }
+  }
+
+  [CREATE]() {
     let frequency = utils.midicps(this.noteNumber);
     let opA = new Operator(this.audioContext);
     let opB = new Operator(this.audioContext);
@@ -48,8 +50,8 @@ export default class TwinklePad extends Tone {
 
   [NOTE_ON](t0) {
     this.fmsynth.start(t0);
-    this.filter.frequency.setValueCurveAtTime(CUTOFF_VALUES, t0, 30);
-    this.releaseNode.gain.setValueAtTime(this.volume, t0);
+    this.filter.frequency.setValueCurveAtTime(this.cutoffValues, t0, 30);
+    this.releaseNode.gain.setValueAtTime(this.volume * GAIN_UP, t0);
   }
 
   [NOTE_OFF](t1) {
@@ -57,7 +59,7 @@ export default class TwinklePad extends Tone {
 
     this.fmsynth.stop(t2);
 
-    this.releaseNode.gain.setValueAtTime(this.volume, t1);
+    this.releaseNode.gain.setValueAtTime(this.volume * GAIN_UP, t1);
     this.releaseNode.gain.exponentialRampToValueAtTime(1e-3, t2);
   }
 

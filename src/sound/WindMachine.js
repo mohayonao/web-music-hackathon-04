@@ -1,18 +1,18 @@
 import Envelope from "@mohayonao/envelope";
-import Tone, { INITIALIZE, NOTE_ON, NOTE_OFF, DISPOSE } from "./Tone";
+import Tone, { INITIALIZE, CREATE, NOTE_ON, NOTE_OFF, DISPOSE } from "./Tone";
 import WebAudioUtils from "../utils/WebAudioUtils";
 import utils from "../utils";
 
-let NOISE = null;
+const GAIN_UP = 0.5;
 
 export default class WindMachine extends Tone {
   [INITIALIZE]() {
-    if (NOISE === null) {
-      NOISE = WebAudioUtils.createWhiteNoise();
-    }
+    this.noise = WebAudioUtils.createWhiteNoise();
+  }
 
+  [CREATE]() {
     this.bufSrc = this.audioContext.createBufferSource();
-    this.bufSrc.buffer = NOISE;
+    this.bufSrc.buffer = this.noise;
     this.bufSrc.loop = true;
     this.bufSrc.onended = () => {
       this.emit("ended");
@@ -59,7 +59,7 @@ export default class WindMachine extends Tone {
     ]).applyTo(this.filter4.frequency, t0);
 
     this.filter4.Q.setValueAtTime(2, t0);
-    this.gain.gain.setValueAtTime(0.1, t0);
+    this.gain.gain.setValueAtTime(this.volume * GAIN_UP, t0);
   }
 
   [NOTE_OFF](t1) {
@@ -69,7 +69,7 @@ export default class WindMachine extends Tone {
 
     this.filter4.Q.setValueAtTime(12, t1);
 
-    this.gain.gain.setValueAtTime(0.1, t1);
+    this.gain.gain.setValueAtTime(this.volume * GAIN_UP, t1);
     this.gain.gain.exponentialRampToValueAtTime(1e-3, t2);
   }
 
