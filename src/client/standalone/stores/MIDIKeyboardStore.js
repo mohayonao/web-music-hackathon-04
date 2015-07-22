@@ -1,7 +1,8 @@
-import Store from "./Store";
+import fluxx from "@mohayonao/remote-fluxx";
 import Sound from "../../../sound";
+import utils from "../../utils";
 
-export default class MIDIKeyboardStore extends Store {
+export default class MIDIKeyboardStore extends fluxx.Store {
   get name() {
     return "midiKeyboard";
   }
@@ -26,7 +27,7 @@ export default class MIDIKeyboardStore extends Store {
   ["/midi-keyboard/octave-shift"](data) {
     let octave = this.data.octave + data.value;
 
-    octave = Math.max(0, Math.min(octave, 9));
+    octave = utils.constrain(octave, 0, 9)|0;
 
     if (this.data.octave !== octave) {
       this.data.octave = octave;
@@ -54,7 +55,7 @@ export default class MIDIKeyboardStore extends Store {
     this.emitChange();
   }
 
-  ["/midi-device/connected/midi-keyboard"]({ deviceName }) {
+  ["/midi-device/connect/midi-keyboard"]({ deviceName }) {
     this.data.connectedDeviceName = deviceName;
     this.emitChange();
   }

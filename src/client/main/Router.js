@@ -1,29 +1,15 @@
-import subote from "subote";
-import WorkerTimer from "worker-timer";
-import SoundManager from "../SoundManager";
-import SyncDate from "../SyncDate";
-import Timeline from "../../utils/Timeline";
-import WebAudioUtils from "../../utils/WebAudioUtils";
-import config from "./config";
+import fluxx from "@mohayonao/remote-fluxx";
+import SyncDate from "./SyncDate";
+import actions from "./actions";
+import stores from "./stores";
 
-export default class Router extends subote.Client {
+export default class Router extends fluxx.Client {
   constructor(...args) {
     super(...args);
 
-    let audioContext = WebAudioUtils.getContext();
-    let timeline = new Timeline({
-      context: audioContext,
-      timerAPI: WorkerTimer,
-    });
+    this.actions = Object.keys(actions).map(className => new actions[className](this));
+    this.stores = Object.keys(stores).map(className => new stores[className](this));
 
-    this.timeline = timeline;
-    this.sound = new SoundManager({
-      audioContext,
-      timeline,
-      offsetTime: config.SEQUENCE_OFFSET_TIME,
-    });
-
-    this._enabled = false;
     this._syncTimes = [];
   }
 
@@ -53,39 +39,5 @@ export default class Router extends subote.Client {
 
       setTimeout(() => this.syncTime(), 1000 * 30);
     });
-  }
-
-  click(e) {
-    this._enabled = !this._enabled;
-
-    if (this._enabled) {
-      this.sound.chore().start();
-      this.timeline.start();
-      e.target.innerText = "SOUND ON";
-    } else {
-      this.sound.stop();
-      this.timeline.stop(true);
-      e.target.innerText = "SOUND OFF";
-    }
-
-    this.socket.emit("enabled", this._enabled);
-  }
-
-  ["/params"](buffer) {
-    this.sound.changeParams(new Uint8Array(buffer));
-  }
-
-  ["/play"](data) {
-    if (this.sound.state === "running") {
-      let now = SyncDate.now() * 0.001;
-
-      data.sort((a, b) => a.playbackTime - b.playbackTime).forEach((data) => {
-        let deltaTime = data.playbackTime - now;
-
-        data.playbackTime = this.sound.currentTime + deltaTime;
-
-        this.sound.play(data);
-      });
-    }
   }
 }

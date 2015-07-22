@@ -1,4 +1,4 @@
-import "./react";
+import "./shim";
 import main from "./main";
 import standalone from "./standalone";
 

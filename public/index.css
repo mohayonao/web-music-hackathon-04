@@ -2,6 +2,27 @@
   font-family: "Roboto", sans-serif;
 }
 
+.abs {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
 .btn {
+  outline: 0 !important;
+  box-shadow: none !important;
+  border-color: #ccc !important;
+}
+
+.btn-toggle {
   width: 150px;
+  margin-right: 5px;
+}
+
+#button {
+  font-weight: normal;
+  color: #333333;
+  background-color: #FFFFFF;
 }
