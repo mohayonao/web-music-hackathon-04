@@ -1,5 +1,3 @@
-global.AudioContext = global.AudioContext || global.webkitAudioContext;
-
 let audioContext = null;
 
 function getContext() {
@@ -9,11 +7,62 @@ function getContext() {
   return audioContext;
 }
 
-function createColoredWave(colors) {
-  let imag = new Float32Array(16);
-  let real = new Float32Array(16);
+function chore() {
+  if (!("ontouchstart" in global)) {
+    return;
+  }
 
-  imag.set(colors, 1);
+  /* eslint-disable no-unused-vars */
+
+  let memo = null;
+
+  /* eslint-enable no-unused-vars */
+
+  function choreFunction() {
+    let bufSrc = audioContext.createBufferSource();
+
+    bufSrc.start(audioContext.currentTime);
+    bufSrc.stop(audioContext.currentTime + 0.001);
+    bufSrc.connect(audioContext.destination);
+    bufSrc.onended = () => {
+      bufSrc.disconnect();
+      memo = null;
+    };
+    memo = bufSrc;
+
+    global.removeEventListener("touchstart", choreFunction);
+  }
+
+  global.addEventListener("touchstart", choreFunction);
+}
+
+function hex2dec(x) {
+  let ch = x.charCodeAt(0);
+
+  if (48 <= ch && ch <= 57) {
+    return ch - 48;
+  }
+
+  if (65 <= ch && ch <= 70) {
+    return ch - 65 + 10;
+  }
+
+  if (97 <= ch && ch <= 102) {
+    return ch - 97 + 10;
+  }
+
+  return 0;
+}
+
+function createColoredWave(colors) {
+  let coloredArray = colors.split("").map((x) => {
+    return hex2dec(x) / 16;
+  });
+
+  let imag = new Float32Array(coloredArray.length);
+  let real = new Float32Array(coloredArray.length);
+
+  imag.set(coloredArray);
 
   return audioContext.createPeriodicWave(real, imag);
 }
@@ -64,6 +113,7 @@ function createWhiteNoise(duration = 4, rand = Math.random) {
 
 export default {
   getContext,
+  chore,
   createColoredWave,
   createWave,
   createPinkNoise,
