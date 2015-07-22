@@ -1,23 +1,29 @@
-import { Delegator } from "@mohayonao/dispatcher";
+import EventEmitter from "@mohayonao/event-emitter";
 import utils from "./";
 
-export default class Sequencer extends Delegator {
-  constructor(router, score, opts={}) {
+export default class Sequencer extends EventEmitter {
+  constructor(timeline, opts={}) {
     super();
 
-    this.router = router;
-    this.score = score;
-    this.timeline = router.timeline;
+    this.timeline = timeline;
     this.state = "suspended";
 
-    this._interval = utils.defaults(opts.interval, 1);
+    this._events = utils.defaults(opts.events, []);
+    this._tempo = utils.defaults(opts.tempo, 120);
     this._ticksPerBeat = utils.defaults(opts.ticksPerBeat, 120);
-
+    this._interval = utils.defaults(opts.interval, 1);
     this._schedId = 0;
     this._index = 0;
     this._ticks = 0;
-    this._tempo = 60;
     this._process = this._process.bind(this);
+  }
+
+  get events() {
+    return this._events;
+  }
+
+  set events(value) {
+    this._events = value;
   }
 
   get tempo() {
@@ -25,7 +31,23 @@ export default class Sequencer extends Delegator {
   }
 
   set tempo(value) {
-    this._tempo = Math.max(10, Math.min(value, 1000));
+    this._tempo = utils.constrain(value, 10, 1000);
+  }
+
+  get ticksPerBeat() {
+    return this._ticksPerBeat;
+  }
+
+  set ticksPerBeat(value) {
+    this._ticksPerBeat = utils.constrain(value, 15, 1920)|0;
+  }
+
+  setData(data) {
+    Object.keys(data).forEach((key) => {
+      this[key] = data[key];
+    });
+    this._index = 0;
+    this._ticks = 0;
   }
 
   start() {
@@ -58,8 +80,8 @@ export default class Sequencer extends Delegator {
     let t1 = t0 + ticks;
     let events = [];
 
-    while (this._index < this.score.length) {
-      let item = this.score[this._index];
+    while (this._index < this._events.length) {
+      let item = this._events[this._index];
 
       if (t1 <= item.time) {
         break;
@@ -85,7 +107,7 @@ export default class Sequencer extends Delegator {
 
     this._ticks = t1;
 
-    if (this.score.length <= this._index) {
+    if (this._events.length <= this._index) {
       this._index = 0;
       this._ticks = 0;
     }
