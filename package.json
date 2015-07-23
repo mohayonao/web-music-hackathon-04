@@ -13,12 +13,12 @@
     "@mohayonao/fm-synth": "^0.1.3",
     "@mohayonao/operator": "^0.1.4",
     "@mohayonao/power-audio-node": "^0.1.1",
+    "@mohayonao/remote-fluxx": "^0.1.3",
     "colors": "^1.1.2",
     "dateformat": "^1.0.11",
     "express": "^4.13.1",
     "osc-msg": "^0.2.2",
     "socket.io": "^1.3.6",
-    "subote": "^0.4.2",
     "worker-timer": "^0.1.1",
     "xtend": "^4.0.0"
   },
