@@ -1,9 +1,9 @@
 import Router from "./Router";
 import config from "./config";
-import utils from "./utils";
-import RemoteKeyboard from "./RemoteKeyboard";
+import utils from "../utils";
+import RemoteKeyboard from "../RemoteKeyboard";
 
-function run(socket) {
+function run(app, socket) {
   let router = new Router(socket);
   let remoteKeyboard = new RemoteKeyboard(config.REMOTE_KEYBOARD_PORT, config.REMOTE_KEYBOARD_HOST);
 
@@ -12,6 +12,12 @@ function run(socket) {
   utils.useOSCReceiver();
   utils.dispatcher.register(router);
   utils.dispatcher.register(remoteKeyboard);
+
+  router.createAction("/sound/load/score", { name: config.DEFAULT_SONG });
+
+  app.on("/app/delegate", ({ address, data }) => {
+    router.createAction(address, data);
+  });
 
   return router;
 }

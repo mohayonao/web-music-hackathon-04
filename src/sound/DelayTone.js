@@ -1,5 +1,5 @@
 import Envelope from "@mohayonao/envelope";
-import Tone, { INITIALIZE, NOTE_ON, NOTE_OFF, DISPOSE } from "./Tone";
+import Tone, { INITIALIZE, CREATE, NOTE_ON, NOTE_OFF, DISPOSE } from "./Tone";
 import WebAudioUtils from "../utils/WebAudioUtils";
 import utils from "../utils";
 
@@ -7,7 +7,7 @@ const ATTACK_TIME = 0.005;
 const DECAY_TIME = 0.005;
 const SUSTAIN_LEVEL = 0.75;
 const SUSTAIN_TIME = 0.050;
-let WAVE = null;
+const GAIN_UP = 2;
 
 export default class DelayTone extends Tone {
   static getEnabledParams() {
@@ -18,17 +18,15 @@ export default class DelayTone extends Tone {
   }
 
   [INITIALIZE]() {
-    if (WAVE === null) {
-      WAVE = WebAudioUtils.createColoredWave([ 1, 0, 0.125 ]);
-    }
+    this.wave = WebAudioUtils.createColoredWave("#fa240000000");
+  }
 
-    this.duration = ATTACK_TIME + DECAY_TIME + SUSTAIN_TIME;
-    this.volume = utils.linlin(this.velocity, 0, 127, 0, 0.85);
-
+  [CREATE]() {
     let frequency = utils.midicps(this.noteNumber);
 
+    this.duration = ATTACK_TIME + DECAY_TIME + SUSTAIN_TIME;
     this.osc = this.audioContext.createOscillator();
-    this.osc.setPeriodicWave(WAVE);
+    this.osc.setPeriodicWave(this.wave);
     this.osc.frequency.value = frequency;
     this.osc.detune.value = utils.finedetune(+4);
     this.osc.onended = () => {
@@ -46,7 +44,7 @@ export default class DelayTone extends Tone {
     this.osc.start(t0);
 
     Envelope.ads(
-      ATTACK_TIME, DECAY_TIME, SUSTAIN_LEVEL, this.volume * 0.5
+      ATTACK_TIME, DECAY_TIME, SUSTAIN_LEVEL, this.volume * GAIN_UP
     ).applyTo(this.releaseNode.gain, t0);
   }
 
@@ -55,7 +53,7 @@ export default class DelayTone extends Tone {
 
     this.osc.stop(t2);
 
-    this.releaseNode.gain.setValueAtTime(this.volume * 0.5, t1);
+    this.releaseNode.gain.setValueAtTime(this.volume * GAIN_UP, t1);
     this.releaseNode.gain.exponentialRampToValueAtTime(1e-3, t2);
   }
 

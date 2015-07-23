@@ -1,16 +1,18 @@
 import Operator from "@mohayonao/operator";
 import FMSynth from "@mohayonao/fm-synth";
 import Envelope from "@mohayonao/envelope";
-import Tone, { INITIALIZE, NOTE_ON, NOTE_OFF, DISPOSE } from "./Tone";
+import Tone, { INITIALIZE, CREATE, NOTE_ON, NOTE_OFF, DISPOSE } from "./Tone";
 import utils from "../utils";
 
 const DECAY_TIME = 2.0;
 const RELEASE_TIME = 0.5;
+const GAIN_UP = 1;
 
 export default class PlasticHarp extends Tone {
-  [INITIALIZE]() {
+  [INITIALIZE]() {}
+
+  [CREATE]() {
     this.duration = DECAY_TIME;
-    this.volume = utils.linexp(this.velocity, 0, 127, 0.75, 1);
 
     let frequency = utils.midicps(this.noteNumber);
     let opA = new Operator(this.audioContext);
@@ -52,7 +54,7 @@ export default class PlasticHarp extends Tone {
     this.fmsynth.start(t0);
 
     this.releaseNode.gain.setValueAtTime(0, t0);
-    this.releaseNode.gain.setValueAtTime(this.volume, t0 + 0.005);
+    this.releaseNode.gain.setValueAtTime(this.volume * GAIN_UP, t0 + 0.005);
   }
 
   [NOTE_OFF](t1) {
@@ -60,7 +62,7 @@ export default class PlasticHarp extends Tone {
 
     this.fmsynth.stop(t2);
 
-    this.releaseNode.gain.setValueAtTime(this.volume, t1);
+    this.releaseNode.gain.setValueAtTime(this.volume * GAIN_UP, t1);
     this.releaseNode.gain.exponentialRampToValueAtTime(1e-3, t2);
   }
 

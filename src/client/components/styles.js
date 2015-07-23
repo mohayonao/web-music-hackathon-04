@@ -21,4 +21,10 @@ export default {
     color: "#333333",
     backgroundColor: "#FFFFFF",
   },
+  SEQUENCER_ON: {
+    color: "#009F8C",
+  },
+  SEQUENCER_OFF: {
+    color: "#333333",
+  },
 };

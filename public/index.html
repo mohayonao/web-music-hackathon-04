@@ -9,13 +9,14 @@
   <link rel="stylesheet" type="text/css" href="index.css">
 </head>
 <body>
-  <div class="container">
-    <h1>WEB MUSIC HACKATHON 04</h1>
-    <div>
-      <button id="button" class="btn btn-default">SOUND OFF</button>
+  <canvas id="canvas" class="abs"></canvas>
+  <div class="abs">
+    <div class="container">
+      <div id="app" class="app"></div>
     </div>
   </div>
   <script src="/socket.io/socket.io.js"></script>
+  <script src="//fb.me/react-0.13.3.min.js"></script>
   <script src="index.js"></script>
   <script>
   window.addEventListener("DOMContentLoaded", function() {

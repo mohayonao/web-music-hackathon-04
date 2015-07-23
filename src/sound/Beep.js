@@ -1,16 +1,20 @@
-import Tone, { INITIALIZE, NOTE_ON, NOTE_OFF, DISPOSE } from "./Tone";
+import Tone, { INITIALIZE, CREATE, NOTE_ON, NOTE_OFF, DISPOSE } from "./Tone";
 import utils from "../utils";
 
 const DECAY_TIME = 0.05;
 const RELEASE_TIME = 0.01;
+const GAIN_UP = 2;
 
 export default class Beep extends Tone {
-  [INITIALIZE]() {
-    this.volume = 1;
+  [INITIALIZE]() {}
+
+  [CREATE]() {
     this.duration = DECAY_TIME;
 
+    let frequency = utils.midicps((this.noteNumber % 12) + 60) * 8;
+
     this.osc = this.audioContext.createOscillator();
-    this.osc.frequency.value = utils.midicps((this.noteNumber % 12) + 60) * 8;
+    this.osc.frequency.value = frequency;
     this.osc.onended = () => {
       this.emit("ended");
     };
@@ -25,7 +29,7 @@ export default class Beep extends Tone {
   [NOTE_ON](t0) {
     this.osc.start(t0);
 
-    this.releaseNode.gain.setValueAtTime(this.volume, t0);
+    this.releaseNode.gain.setValueAtTime(this.volume * GAIN_UP, t0);
   }
 
   [NOTE_OFF](t1) {
@@ -33,7 +37,7 @@ export default class Beep extends Tone {
 
     this.osc.stop(t2);
 
-    this.releaseNode.gain.setValueAtTime(this.volume, t1);
+    this.releaseNode.gain.setValueAtTime(this.volume * GAIN_UP, t1);
     this.releaseNode.gain.exponentialRampToValueAtTime(1e-3, t2);
   }
 

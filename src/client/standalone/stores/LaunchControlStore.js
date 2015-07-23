@@ -1,8 +1,9 @@
-import Store from "./Store";
+import fluxx from "@mohayonao/remote-fluxx";
 import Sound from "../../../sound";
+import utils from "../../utils";
 import config from "../config";
 
-export default class LaunchControlStore extends Store {
+export default class LaunchControlStore extends fluxx.Store {
   getInitialState() {
     return {
       deviceName: "",
@@ -11,27 +12,26 @@ export default class LaunchControlStore extends Store {
       params: new Uint8Array(config.DEFAULT_PARAMS),
       enabledParams: new Uint8Array(16),
       activeKnob: -1,
-      activePad: new Uint8Array(8),
     };
   }
 
   ["/launch-control/pad"]({ track }) {
-    track = Math.max(0, Math.min(track, 7));
+    track = utils.constrain(track, 0, 7)|0;
 
-    this.data.activePad[track] = 1 - this.data.activePad[track];
+    this.data.params[track + 16] = 1 - this.data.params[track + 16];
     this.emitChange();
   }
 
   ["/launch-control/knob1"]({ track, value }) {
-    track = Math.max(0, Math.min(track, 7));
-    value = Math.max(0, Math.min(value, 127));
+    track = utils.constrain(track, 0, 7)|0;
+    value = utils.constrain(value, 0, 127)|0;
 
     this.changeParam(track, value);
   }
 
   ["/launch-control/knob2"]({ track, value }) {
-    track = Math.max(0, Math.min(track, 7));
-    value = Math.max(0, Math.min(value, 127));
+    track = utils.constrain(track, 0, 7)|0;
+    value = utils.constrain(value, 0, 127)|0;
 
     this.changeParam(track + 8, value);
   }
@@ -47,7 +47,7 @@ export default class LaunchControlStore extends Store {
     }
 
     let oldValue = this.data.params[this.data.activeKnob];
-    let newValue = Math.max(0, Math.min(oldValue - delta, 127));
+    let newValue = utils.constrain(oldValue - delta, 0, 127)|0;
 
     this.changeParam(this.data.activeKnob, newValue);
   }
@@ -76,7 +76,7 @@ export default class LaunchControlStore extends Store {
     this.emitChange();
   }
 
-  ["/midi-device/connected/launch-control"]({ deviceName }) {
+  ["/midi-device/connect/launch-control"]({ deviceName }) {
     this.data.connectedDeviceName = deviceName;
     this.emitChange();
   }
@@ -90,7 +90,7 @@ export default class LaunchControlStore extends Store {
 
     this.emitChange();
 
-    this.dispatch("/launch-control/updated/params", {
+    this.router.createAction("/launch-control/params/update", {
       params: this.data.params,
     });
   }

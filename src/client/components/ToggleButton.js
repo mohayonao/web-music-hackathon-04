@@ -25,7 +25,7 @@ export default class ToggleButton extends React.Component {
     if (typeof this.props.action === "function") {
       this.props.action(e);
     } else {
-      router.createAction(`/click/${this.props.action}`, {
+      router.createAction(`/toggle-button/click/${this.props.action}`, {
         value: data.value,
       });
     }

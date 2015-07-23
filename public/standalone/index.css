@@ -24,6 +24,11 @@
   margin: 2px 0;
 }
 
+.song-selector {
+  width: 305px !important;
+  margin-right: 5px;
+}
+
 .midi-device-selector {
   width: 305px !important;
   margin-right: 5px;

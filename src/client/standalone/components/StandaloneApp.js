@@ -1,6 +1,8 @@
-import ToggleButton from "./ToggleButton";
-import LaunchControl from "./LaunchControl";
-import MIDIKeyboard from "./MIDIKeyboard";
+import ToggleButton from "../../components/ToggleButton";
+import SongSelector from "../../components/SongSelector";
+import LaunchControl from "../../components/LaunchControl";
+import MIDIKeyboard from "../../components/MIDIKeyboard";
+import STYLES from "../../components/styles";
 
 export default class StandaloneApp extends React.Component {
   constructor(...args) {
@@ -31,6 +33,7 @@ export default class StandaloneApp extends React.Component {
 
   render() {
     let { router } = this.props;
+    let styles = this.state.sound.sequencerState === "running" ? STYLES.SEQUENCER_ON : STYLES.SEQUENCER_OFF;
     let soundButtonData = {
       value: this.state.sound.soundState === "running",
       trueValue: "SOUND ON",
@@ -44,12 +47,17 @@ export default class StandaloneApp extends React.Component {
 
     return (
       <div>
+        <h1 style={ styles }>WEB MUSIC HACKATHON 04</h1>
         <div>
           <ToggleButton router={ router } data={ soundButtonData } action="sound" />
           <ToggleButton router={ router } data={ sequencerButtonData } action="sequencer" />
         </div>
         <hr />
         <div className="form">
+          <div className="form-group">
+            <label>SONG</label>
+            <SongSelector router={ router } data={ this.state.sound } />
+          </div>
           <div className="form-group">
             <label>MIDI Controller</label>
             <LaunchControl router={ router } data={ this.state.launchControl } />

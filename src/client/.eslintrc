@@ -1,5 +1,14 @@
 {
   "env": {
     "browser": true
-  }
+  },
+  "plugins": [
+    "react"
+  ],
+  "rules": {
+    "react/jsx-uses-vars": 1,
+  },
+  "globals": {
+    "React": true,
+  },
 }

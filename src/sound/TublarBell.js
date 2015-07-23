@@ -1,15 +1,17 @@
 import Operator from "@mohayonao/operator";
 import FMSynth from "@mohayonao/fm-synth";
 import Envelope from "@mohayonao/envelope";
-import Tone, { INITIALIZE, NOTE_ON, NOTE_OFF, DISPOSE } from "./Tone";
+import Tone, { INITIALIZE, CREATE, NOTE_ON, NOTE_OFF, DISPOSE } from "./Tone";
 import utils from "../utils";
 
 const RELEASE_TIME = 13.000;
+const GAIN_UP = 1;
 
 export default class TublarBell extends Tone {
-  [INITIALIZE]() {
+  [INITIALIZE]() {}
+
+  [CREATE]() {
     this.duration = 1;
-    this.volume = utils.linexp(this.velocity, 0, 127, 0.25, 1);
 
     let frequency = utils.midicps(this.noteNumber - 2);
     let opA = new Operator(this.audioContext);
@@ -47,7 +49,7 @@ export default class TublarBell extends Tone {
 
   [NOTE_ON](t0) {
     this.fmsynth.start(t0);
-    this.releaseNode.gain.setValueAtTime(this.volume * utils.dbamp(-22), t0);
+    this.releaseNode.gain.setValueAtTime(this.volume * GAIN_UP, t0);
   }
 
   [NOTE_OFF](t1) {
@@ -55,7 +57,7 @@ export default class TublarBell extends Tone {
 
     this.fmsynth.stop(t2);
 
-    this.releaseNode.gain.setValueAtTime(this.volume * utils.dbamp(-22), t1);
+    this.releaseNode.gain.setValueAtTime(this.volume * GAIN_UP, t1);
     this.releaseNode.gain.exponentialRampToValueAtTime(1e-3, t2);
   }
 
