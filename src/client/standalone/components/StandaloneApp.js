@@ -33,14 +33,14 @@ export default class StandaloneApp extends React.Component {
 
   render() {
     let { router } = this.props;
-    let styles = this.state.sound.sequencerState === "running" ? STYLES.SEQUENCER_ON : STYLES.SEQUENCER_OFF;
+    let styles = this.state.sequencer.enabled ? STYLES.SEQUENCER_ON : STYLES.SEQUENCER_OFF;
     let soundButtonData = {
-      value: this.state.sound.soundState === "running",
+      value: this.state.sound.enabled,
       trueValue: "SOUND ON",
       falseValue: "SOUND OFF",
     };
     let sequencerButtonData = {
-      value: this.state.sound.sequencerState === "running",
+      value: this.state.sequencer.enabled,
       trueValue: "SEQUENCER ON",
       falseValue: "SEQUENCER OFF",
     };
@@ -56,10 +56,10 @@ export default class StandaloneApp extends React.Component {
         <div className="form">
           <div className="form-group">
             <label>SONG</label>
-            <SongSelector router={ router } data={ this.state.sound } />
+            <SongSelector router={ router } data={ this.state.sequencer } />
           </div>
           <div className="form-group">
-            <label>MIDI Controller</label>
+            <label>MIDI Controller / LAUNCH CONRTOL</label>
             <LaunchControl router={ router } data={ this.state.launchControl } />
           </div>
           <div className="form-group">

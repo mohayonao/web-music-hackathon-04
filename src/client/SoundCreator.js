@@ -1,6 +1,6 @@
 import EventEmitter from "@mohayonao/event-emitter";
 import xtend from "xtend";
-import Sound from "../sound";
+import sound from "../sound";
 import config from "./config";
 import utils from "./utils";
 
@@ -17,7 +17,7 @@ export default class SoundCreator extends EventEmitter {
     this._params = new Uint8Array(config.DEFAULT_PARAMS);
   }
 
-  create(data) {
+  push(data) {
     if (data.dataType === "sequence") {
       data = xtend(data, {
         dataType: "noteOn",
@@ -39,18 +39,15 @@ export default class SoundCreator extends EventEmitter {
     }
   }
 
-  noteOn(data) {
-    let { noteNumber, track, program, playbackTime } = data;
-    let params = this._params;
-
-    let Klass = Sound.getClass({ track, program });
+  noteOn({ playbackTime, track, noteNumber, velocity, duration, program }) {
+    let Klass = sound.instruments.getClass(program);
     let instance = new Klass({
       audioContext: this.audioContext,
       timeline: this.timeline,
-      params: params,
-      noteNumber: data.noteNumber,
-      velocity: data.velocity,
-      duration: data.duration,
+      params: this._params,
+      noteNumber: noteNumber,
+      velocity: velocity,
+      duration: duration,
     });
 
     instance.initialize();
@@ -77,9 +74,7 @@ export default class SoundCreator extends EventEmitter {
     this._notes.push(instance);
   }
 
-  noteOff(data) {
-    let { noteNumber, track, playbackTime } = data;
-
+  noteOff({ playbackTime, track, noteNumber }) {
     let instance = this._tracks[track][noteNumber];
 
     if (!instance) {

@@ -6,8 +6,8 @@ export default class SequencerStore extends fluxx.Store {
   constructor(...args) {
     super(...args);
 
+    this.audioContext = this.router.audioContext;
     this.timeline = this.router.timeline;
-
     this.sequencer = new Sequencer(this.timeline, {
       interval: config.SEQUENCER_INTERVAL,
     });
@@ -22,37 +22,24 @@ export default class SequencerStore extends fluxx.Store {
   getInitialState() {
     return {
       song: config.DEFAULT_SONG,
-      tempo: 60,
-      state: "suspended",
+      songs: config.SONGS,
+      enabled: false,
     };
   }
 
-  ["/sound/load/score"](data) {
-    this.data.song = data.name;
-    this.data.tempo = data.tempo;
+  ["/sound/load/score"]({ data }) {
     this.sequencer.setData(data);
+    this.data.song = data.name;
     this.emitChange();
   }
 
-  ["/sequencer/start"]() {
-    this.sequencer.start();
-    this.data.state = this.sequencer.state;
-    this.emitChange();
-  }
-
-  ["/sequencer/stop"]() {
-    this.sequencer.stop();
-    this.data.state = this.sequencer.state;
-    this.emitChange();
-  }
-
-  ["/sequencer/change/tempo"]({ tempo, delta }) {
-    if (typeof tempo === "number") {
-      this.sequencer.tempo = tempo;
-    } else if (typeof delta === "number") {
-      this.sequencer.tempo += delta;
+  ["/toggle-button/click/sequencer"]() {
+    if (this.sequencer.state === "suspended") {
+      this.sequencer.start();
+    } else {
+      this.sequencer.stop();
     }
-    this.data.tempo = this.sequencer.tempo;
+    this.data.enabled = this.sequencer.state === "running";
     this.emitChange();
   }
 }

@@ -1,12 +1,12 @@
+import Instrument, { INITIALIZE, CREATE, NOTE_ON, NOTE_OFF, DISPOSE } from "../Instrument";
+import Envelope from "@mohayonao/envelope";
 import Operator from "@mohayonao/operator";
 import FMSynth from "@mohayonao/fm-synth";
-import Envelope from "@mohayonao/envelope";
-import Tone, { INITIALIZE, CREATE, NOTE_ON, NOTE_OFF, DISPOSE } from "./Tone";
 import utils from "../utils";
 
 const GAIN_UP = 0.5;
 
-export default class TwinklePad extends Tone {
+export default class TwinklePad extends Instrument {
   [INITIALIZE]() {
     this.cutoffValues = new Float32Array(1024);
 

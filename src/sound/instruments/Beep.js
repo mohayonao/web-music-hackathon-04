@@ -1,11 +1,14 @@
-import Tone, { INITIALIZE, CREATE, NOTE_ON, NOTE_OFF, DISPOSE } from "./Tone";
+import Instrument, { INITIALIZE, CREATE, NOTE_ON, NOTE_OFF, DISPOSE } from "../Instrument";
+// import Envelope from "@mohayonao/envelope";
+// import Operator from "@mohayonao/operator";
+// import FMSynth from "@mohayonao/fm-synth";
 import utils from "../utils";
 
 const DECAY_TIME = 0.05;
 const RELEASE_TIME = 0.01;
 const GAIN_UP = 2;
 
-export default class Beep extends Tone {
+export default class Beep extends Instrument {
   [INITIALIZE]() {}
 
   [CREATE]() {

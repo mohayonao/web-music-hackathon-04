@@ -30,9 +30,9 @@ export default class MainApp extends React.Component {
 
   render() {
     let { router } = this.props;
-    let styles = this.state.sound.sequencerState === "running" ? STYLES.SEQUENCER_ON : STYLES.SEQUENCER_OFF;
+    let styles = this.state.sequencer.enabled ? STYLES.SEQUENCER_ON : STYLES.SEQUENCER_OFF;
     let soundButtonData = {
-      value: this.state.sound.soundState === "running",
+      value: this.state.sound.enabled,
       trueValue: "SOUND ON",
       falseValue: "SOUND OFF",
     };

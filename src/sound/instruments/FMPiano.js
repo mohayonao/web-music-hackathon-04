@@ -1,20 +1,14 @@
+import Instrument, { INITIALIZE, CREATE, NOTE_ON, NOTE_OFF, DISPOSE } from "../Instrument";
+import Envelope from "@mohayonao/envelope";
 import Operator from "@mohayonao/operator";
 import FMSynth from "@mohayonao/fm-synth";
-import Envelope from "@mohayonao/envelope";
-import Tone, { INITIALIZE, CREATE, NOTE_ON, NOTE_OFF, DISPOSE } from "./Tone";
 import utils from "../utils";
-import WebAudioUtils from "../utils/WebAudioUtils";
 
-const RELEASE_TIME = 2.5;
-const GAIN_UP = 1.25;
+const RELEASE_TIME = 0.750;
+const GAIN_UP = 2.5;
 
-export default class SweepPad extends Tone {
-  [INITIALIZE]() {
-    this.waveA = WebAudioUtils.createColoredWave("#f08012");
-    this.waveB = WebAudioUtils.createColoredWave("#a14055");
-    this.waveC = WebAudioUtils.createColoredWave("#f08012");
-    this.waveD = WebAudioUtils.createColoredWave("#a14055");
-  }
+export default class FMPiano extends Instrument {
+  [INITIALIZE]() {}
 
   [CREATE]() {
     let frequency = utils.midicps(this.noteNumber);
@@ -23,23 +17,21 @@ export default class SweepPad extends Tone {
     let opC = new Operator(this.audioContext);
     let opD = new Operator(this.audioContext);
 
-    opA.setPeriodicWave(this.waveA);
     opA.frequency.value = frequency;
-    opA.setEnvelope(Envelope.a(2.4, 0.25));
+    opA.detune.value = utils.finedetune(-2);
+    opA.setEnvelope(Envelope.r(7.16, utils.dbamp(-7.9)));
 
-    opB.setPeriodicWave(this.waveB);
-    opB.frequency.value = frequency;
-    opB.detune.value = utils.finedetune(3);
-    opB.setEnvelope(Envelope.ads(0.01, 1.50, utils.dbamp(-14) * frequency * 50));
+    opB.frequency.value = frequency * 14;
+    opB.detune.value = utils.finedetune(2);
+    opB.setEnvelope(Envelope.r(1.60, utils.dbamp(-40) * frequency * this.volume * 20));
 
-    opC.setPeriodicWave(this.waveC);
     opC.frequency.value = frequency;
-    opC.setEnvelope(Envelope.a(2.4, 0.25));
+    opC.detune.value = utils.finedetune(3);
+    opC.setEnvelope(Envelope.r(7.16, utils.dbamp(-6.7)));
 
-    opD.setPeriodicWave(this.waveD);
     opD.frequency.value = frequency;
-    opD.detune.value = utils.finedetune(-7);
-    opD.setEnvelope(Envelope.ads(0.01, 1.50, utils.dbamp(-14) * frequency * 50));
+    opD.detune.value = utils.finedetune(1);
+    opD.setEnvelope(Envelope.r(7.16, utils.dbamp(-24) * frequency * this.volume * 20));
 
     this.fmsynth = new FMSynth(7, [ opA, opB, opC, opD ]);
     this.fmsynth.onended = () => {
@@ -62,7 +54,6 @@ export default class SweepPad extends Tone {
     let t2 = t1 + RELEASE_TIME;
 
     this.fmsynth.stop(t2);
-
     this.releaseNode.gain.setValueAtTime(this.volume * GAIN_UP, t1);
     this.releaseNode.gain.exponentialRampToValueAtTime(1e-3, t2);
   }

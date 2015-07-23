@@ -1,5 +1,5 @@
 import fluxx from "@mohayonao/remote-fluxx";
-import Sound from "../../../sound";
+import sound from "../../../sound";
 import utils from "../../utils";
 
 export default class MIDIKeyboardStore extends fluxx.Store {
@@ -12,7 +12,7 @@ export default class MIDIKeyboardStore extends fluxx.Store {
       deviceName: "",
       connectedDeviceName: "",
       controllers: [],
-      presets: Object.keys(Sound.presets),
+      presets: Object.keys(sound.instruments.presets),
       presetName: "",
       noteOn: new Uint8Array(128),
       octave: 5,

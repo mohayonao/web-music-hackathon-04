@@ -1,5 +1,6 @@
 .container {
   font-family: "Roboto", sans-serif;
+  color: #333333;
 }
 
 .app {
@@ -34,15 +35,6 @@
   margin-right: 5px;
 }
 
-.launch-control {
-  margin: 5px 0;
-  padding: 5px 0;
-  user-select: none;
-  -moz-user-select: none;
-  -webkit-user-select: none;
-  -ms-user-select: none;
-}
-
 .launch-control-track-container {
   list-style: none;
   margin: 0;
@@ -72,11 +64,6 @@
   padding-top: 12px;
   text-align: center;
   cursor: pointer;
-}
-
-.midi-keyboard {
-  margin: 5px 0;
-  padding: 5px 0;
 }
 
 .midi-keyboard-preset-selector {
