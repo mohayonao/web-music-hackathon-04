@@ -1,12 +1,13 @@
+import Instrument, { INITIALIZE, CREATE, NOTE_ON, NOTE_OFF, DISPOSE } from "../Instrument";
+import Envelope from "@mohayonao/envelope";
 import Operator from "@mohayonao/operator";
 import FMSynth from "@mohayonao/fm-synth";
-import Envelope from "@mohayonao/envelope";
-import Tone, { INITIALIZE, CREATE, NOTE_ON, NOTE_OFF, DISPOSE } from "./Tone";
 import utils from "../utils";
 
-const GAIN_UP = 1.25;
+const RELEASE_TIME = 0.25;
+const GAIN_UP = 0.6;
 
-export default class PureVibes extends Tone {
+export default class Distorted extends Instrument {
   [INITIALIZE]() {}
 
   [CREATE]() {
@@ -15,17 +16,17 @@ export default class PureVibes extends Tone {
     let opB = new Operator(this.audioContext);
     let opC = new Operator(this.audioContext);
 
-    opA.frequency.value = frequency;
-    opA.setEnvelope(Envelope.r(8.31, utils.dbamp(-0.6)));
+    opA.frequency.value = frequency * 0.5;
+    opA.setEnvelope(Envelope.ads(0.005, 0.100, utils.dbamp(-2)));
 
-    opB.frequency.value = frequency * 4;
-    opB.setEnvelope(Envelope.r(1.07, utils.dbamp(-3.8)));
+    opB.frequency.value = frequency;
+    opB.detune.value = utils.finedetune(-2);
+    opB.setEnvelope(Envelope.ads(0.250, 0.500, utils.dbamp(-12), utils.dbamp(-18) * frequency * 50));
 
-    opC.type = "square";
-    opC.frequency.value = frequency * 13;
-    opC.setEnvelope(Envelope.r(13.9, utils.dbamp(-28) * frequency * 50));
+    opC.frequency.value = frequency;
+    opC.setEnvelope(Envelope.ads(0.005, 2.500, utils.dbamp(-12), utils.dbamp(-10) * frequency * 50));
 
-    this.fmsynth = new FMSynth(5, [ opA, opB, opC, null ]);
+    this.fmsynth = new FMSynth(3, [ opA, opB, opC, null ]);
     this.fmsynth.onended = () => {
       this.emit("ended");
     };
@@ -38,13 +39,12 @@ export default class PureVibes extends Tone {
   }
 
   [NOTE_ON](t0) {
-    this.startTime = t0;
     this.fmsynth.start(t0);
     this.releaseNode.gain.setValueAtTime(this.volume * GAIN_UP, t0);
   }
 
   [NOTE_OFF](t1) {
-    let t2 = t1 + 0.5;
+    let t2 = t1 + RELEASE_TIME;
 
     this.fmsynth.stop(t2);
 
@@ -53,7 +53,5 @@ export default class PureVibes extends Tone {
   }
 
   [DISPOSE]() {
-    this.fmsynth.disconnect();
-    this.fmsynth = this.releaseNode = null;
   }
 }

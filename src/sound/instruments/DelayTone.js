@@ -1,6 +1,7 @@
+import Instrument, { INITIALIZE, CREATE, NOTE_ON, NOTE_OFF, DISPOSE } from "../Instrument";
 import Envelope from "@mohayonao/envelope";
-import Tone, { INITIALIZE, CREATE, NOTE_ON, NOTE_OFF, DISPOSE } from "./Tone";
-import WebAudioUtils from "../utils/WebAudioUtils";
+// import Operator from "@mohayonao/operator";
+// import FMSynth from "@mohayonao/fm-synth";
 import utils from "../utils";
 
 const ATTACK_TIME = 0.005;
@@ -9,7 +10,7 @@ const SUSTAIN_LEVEL = 0.75;
 const SUSTAIN_TIME = 0.050;
 const GAIN_UP = 2;
 
-export default class DelayTone extends Tone {
+export default class DelayTone extends Instrument {
   static getEnabledParams() {
     return [
       0, 0, 0, 0, 0, 0, 0, 0,
@@ -18,7 +19,7 @@ export default class DelayTone extends Tone {
   }
 
   [INITIALIZE]() {
-    this.wave = WebAudioUtils.createColoredWave("#fa240000000");
+    this.wave = utils.createColoredWave("#fa240000000");
   }
 
   [CREATE]() {

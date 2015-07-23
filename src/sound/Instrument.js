@@ -7,7 +7,7 @@ export const NOTE_ON = utils.symbol("NOTE_ON");
 export const NOTE_OFF = utils.symbol("NOTE_OFF");
 export const DISPOSE = utils.symbol("DISPOSE");
 
-export default class Tone extends EventEmitter {
+export default class Instrument extends EventEmitter {
   constructor({ audioContext, timeline, params, noteNumber, velocity, duration }) {
     super();
 

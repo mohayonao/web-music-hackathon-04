@@ -1,13 +1,14 @@
+import Instrument, { INITIALIZE, CREATE, NOTE_ON, NOTE_OFF, DISPOSE } from "../Instrument";
 import Envelope from "@mohayonao/envelope";
-import Tone, { INITIALIZE, CREATE, NOTE_ON, NOTE_OFF, DISPOSE } from "./Tone";
-import WebAudioUtils from "../utils/WebAudioUtils";
+// import Operator from "@mohayonao/operator";
+// import FMSynth from "@mohayonao/fm-synth";
 import utils from "../utils";
 
 const GAIN_UP = 0.5;
 
-export default class WindMachine extends Tone {
+export default class WindMachine extends Instrument {
   [INITIALIZE]() {
-    this.noise = WebAudioUtils.createWhiteNoise();
+    this.noise = utils.createWhiteNoise();
   }
 
   [CREATE]() {
