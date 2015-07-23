@@ -25,7 +25,7 @@ export default class SoundDispatcher extends BaseSoundDispatcher {
     }
   }
 
-  dispatch(instance) {
+  push(instance) {
     instance.connect(utils.sample(this.panners));
   }
 }

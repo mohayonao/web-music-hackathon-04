@@ -1,5 +1,5 @@
 import fluxx from "@mohayonao/remote-fluxx";
-import Sound from "../../../sound";
+import sound from "../../../sound";
 import utils from "../../utils";
 import config from "../config";
 
@@ -60,8 +60,10 @@ export default class LaunchControlStore extends fluxx.Store {
   }
 
   ["/midi-keyboard/preset"]({ presetName }) {
-    if (Sound.presets.hasOwnProperty(presetName)) {
-      this.data.enabledParams = Sound.presets[presetName].getEnabledParams();
+    let presets = sound.instruments.presets;
+
+    if (presets.hasOwnProperty(presetName)) {
+      this.data.enabledParams = presets[presetName].getEnabledParams();
       this.emitChange();
     }
   }

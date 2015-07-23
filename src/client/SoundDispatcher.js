@@ -5,7 +5,7 @@ export default class SoundDispatcher {
     this.outlet = null;
   }
 
-  dispatch(instance) {
+  push(instance) {
     if (this.outlet) {
       instance.connect(this.outlet);
     }

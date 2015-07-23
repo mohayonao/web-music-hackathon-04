@@ -9,7 +9,7 @@ export default class SoundDispatcher extends BaseSoundDispatcher {
     this.outlet.threshold.value = -2;
   }
 
-  dispatch(instance) {
+  push(instance) {
     instance.connect(this.outlet);
   }
 }
