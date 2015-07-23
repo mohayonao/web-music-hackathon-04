@@ -6,6 +6,10 @@ function appendIfNotExists(list, value) {
   }
 }
 
+function constrain(value, minValue, maxValue) {
+  return Math.max(minValue, Math.min(value, maxValue));
+}
+
 function dbamp(db) {
   return Math.pow(10, db * 0.05);
 }
@@ -139,6 +143,7 @@ function wrapAt(list, index) {
 
 export default {
   appendIfNotExists,
+  constrain,
   dbamp,
   debounce,
   defaults,
