@@ -87,18 +87,6 @@ describe("utils", () => {
       assert(closeTo(utils.finedetune(-1000), -1200, 1e-6));
     });
   });
-  describe("getItem(object: object, keys: string[]): any", () => {
-    it("works", () => {
-      let object = { a: { b: { c: 0 } } };
-
-      assert(utils.getItem(object, []) === object);
-      assert(utils.getItem(object, [ "a" ]) === object.a);
-      assert(utils.getItem(object, [ "a", "b" ]) === object.a.b);
-      assert(utils.getItem(object, [ "a", "b", "c" ]) === object.a.b.c);
-      assert(utils.getItem(object, [ "a", "b", "c", "d" ]) === null);
-      assert(utils.getItem(object, [ "a", "c", "d", "c" ]) === null);
-    });
-  });
   describe("linexp(value: number, inMin, inMax, outMin, outMax): number", () => {
     it("works", () => {
       assert(closeTo(utils.linexp(0.1, 0.01, 1, 100, 8000), 148.93891324884, 1e-6));
@@ -139,19 +127,6 @@ describe("utils", () => {
       assert(spy.callCount === 1);
     });
   });
-  describe("removeItem(object: object, keys: string[]): any", () => {
-    it("works", () => {
-      let object = { a: { b: { c: 0 } } };
-
-      assert(utils.removeItem(object, []) === object);
-      assert(utils.removeItem(object, [ "a", "b", "c" ]) === 0);
-      assert.deepEqual(object, { a: { b: {} } });
-      assert(utils.removeItem(object, [ "a" ]));
-      assert.deepEqual(object, {});
-      assert(utils.getItem(object, [ "a", "b", "c", "d" ]) === null);
-      assert(utils.getItem(object, [ "a", "c", "d", "c" ]) === null);
-    });
-  });
   describe("removeIfExists(list: any[], value: any): void", () => {
     it("works", () => {
       let list = [ 1, 2 ];
@@ -164,23 +139,6 @@ describe("utils", () => {
 
       utils.removeIfExists(list, 2);
       assert.deepEqual(list, []);
-    });
-  });
-  describe("setItem(object: object, value: any, keys: string[]): any", () => {
-    it("works", () => {
-      let object = { a: { b: { c: 0 } } };
-
-      utils.setItem(object, 100, [ "a", "b", "c" ]);
-      assert.deepEqual(object, { a: { b: { c: 100 } } });
-
-      utils.setItem(object, 200, [ "a", "b" ]);
-      assert.deepEqual(object, { a: { b: 200 } });
-
-      utils.setItem(object, 300, [ "a", "b", "c" ]);
-      assert.deepEqual(object, { a: { b: 200 } });
-
-      utils.setItem(object, 400, []);
-      assert.deepEqual(object, { a: { b: 200 } });
     });
   });
 });
