@@ -53,6 +53,11 @@ export default class Router extends fluxx.Client {
       return;
     }
 
+    let now = SyncDate.now() * 0.001;
+    let deltaTime = data.playbackTime - now;
+
+    data.playbackTime = this.audioContext.currentTime + deltaTime;
+
     this.soundCreator.push(data);
   }
 
@@ -66,6 +71,7 @@ export default class Router extends fluxx.Client {
     }
 
     this.params = state.launchControl.params;
+    this.soundCreator.setParams(this.params);
   }
 
   syncTime() {

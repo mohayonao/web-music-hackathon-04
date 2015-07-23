@@ -1,4 +1,4 @@
-const DEFAULT = "Random";
+const DEFAULT = "Routing";
 
 export default class MIDIKeyboardPresetSelector extends React.Component {
   constructor(...args) {

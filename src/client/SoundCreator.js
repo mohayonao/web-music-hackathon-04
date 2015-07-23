@@ -39,25 +39,22 @@ export default class SoundCreator extends EventEmitter {
     }
   }
 
-  noteOn({ playbackTime, track, noteNumber, velocity, duration, program }) {
-    let Klass = sound.instruments.getClass(program);
-    let instance = new Klass({
+  noteOn(data) {
+    let Klass = sound.instruments.getClass(data.program);
+    let instance = new Klass(xtend(data, {
       audioContext: this.audioContext,
       timeline: this.timeline,
       params: this._params,
-      noteNumber: noteNumber,
-      velocity: velocity,
-      duration: duration,
-    });
+    }));
 
     instance.initialize();
     instance.create();
-    instance.noteOn(playbackTime);
+    instance.noteOn(data.playbackTime);
 
     if (instance.duration !== Infinity) {
-      instance.noteOff(playbackTime + instance.duration);
+      instance.noteOff(data.playbackTime + instance.duration);
     } else {
-      this._tracks[track][noteNumber] = instance;
+      this._tracks[data.track][data.noteNumber] = instance;
     }
 
     instance.once("ended", () => {
