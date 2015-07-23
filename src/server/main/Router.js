@@ -1,4 +1,5 @@
 import fluxx from "@mohayonao/remote-fluxx";
+import xtend from "xtend";
 import logger from "../logger";
 import actions from "./actions";
 import stores from "./stores";
@@ -18,7 +19,7 @@ export default class Router extends fluxx.Server {
     this.timeline.on("processed", this.sendSoundPlay.bind(this));
 
     this.tracks = sound.tracks.tracks.map((Track) => {
-      return new Track(this).on("play", (data) => {
+      return new Track(this.timeline).on("play", (data) => {
         this.pushSoundPlay(data);
       });
     });
@@ -64,6 +65,10 @@ export default class Router extends fluxx.Server {
     } else {
       this.timeline.stop(true);
     }
+
+    this.tracks.forEach((track) => {
+      track.setState(xtend(state.sequencer, state.launchControl));
+    });
 
     this.setParams(state.launchControl.params);
   }
@@ -111,7 +116,7 @@ export default class Router extends fluxx.Server {
       if (client.$pendings.length === 0) {
         return;
       }
-      client.sendAction("/sound/play", client.$pendings);
+      client.sendAction("/server/play", client.$pendings);
     });
   }
 }

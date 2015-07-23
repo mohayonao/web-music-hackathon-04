@@ -23,14 +23,19 @@ export default class SequencerStore extends fluxx.Store {
     return {
       song: config.DEFAULT_SONG,
       tempo: 60,
+      ticksPerBeat: 480,
       state: "suspended",
     };
   }
 
   ["/sound/load/score"](data) {
+    this.sequencer.ticksPerBeat = data.ticksPerBeat;
+    this.sequencer.tempo = data.tempo;
+    this.sequencer.events = data.events;
+    this.sequencer.reset();
     this.data.song = data.name;
     this.data.tempo = data.tempo;
-    this.sequencer.setData(data);
+    this.data.ticksPerBeat = data.ticksPerBeat;
     this.emitChange();
   }
 
