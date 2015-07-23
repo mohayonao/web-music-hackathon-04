@@ -8,27 +8,14 @@ export default class SequencerStore extends fluxx.Store {
 
     this.timeline = this.router.timeline;
 
-    this.timeline.on("process", () => {
-      this.router.clients.forEach((client) => {
-        client.$pendings = [];
-      });
-    });
-
-    this.timeline.on("processed", () => {
-      this.router.clients.forEach((client) => {
-        if (client.$pendings.length === 0) {
-          return;
-        }
-        client.sendAction("/sound/play", client.$pendings);
-      });
-    });
-
     this.sequencer = new Sequencer(this.timeline, {
       interval: config.SEQUENCER_INTERVAL,
     });
 
     this.sequencer.on("play", (events) => {
-      this.router.play(events);
+      events.forEach((data) => {
+        this.router.play(data);
+      });
     });
   }
 
