@@ -68,8 +68,6 @@ export default class WindMachine extends Instrument {
 
     this.bufSrc.stop(t2);
 
-    this.filter4.Q.setValueAtTime(12, t1);
-
     this.gain.gain.setValueAtTime(this.volume * GAIN_UP, t1);
     this.gain.gain.exponentialRampToValueAtTime(1e-3, t2);
   }

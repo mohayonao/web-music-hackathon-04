@@ -11,8 +11,11 @@ export default class Track6 extends Track {
         return;
       }
 
-      let program = utils.sample([
+      let program = utils.wsample([
         "WindMachine",
+        "DecayNoise",
+        "ImpulseNoise",
+        "SAHFilteredNoise",
       ]);
 
       next(xtend(data, { program }));

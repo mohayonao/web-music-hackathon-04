@@ -1,24 +1,20 @@
 import Track from "../Track";
-import MIDISplitter from "../effects/MIDISplitter";
-import MIDIFilter from "../effects/MIDIFilter";
-import MIDIStutter from "../effects/MIDIStutter";
-import MIDIExtend from "../effects/MIDIExtend";
 
 export default class Track3 extends Track {
   constructor(...args) {
     super(...args);
 
-    let splitter = new MIDISplitter(this.timeline, (data) => {
+    let splitter = this.split((data) => {
       return data.track;
     });
 
-    this.pipe(splitter.channels[1]).pipe(new MIDIExtend(this.timeline, {
+    this.pipe(splitter.channels[1]).pipe(this.extend({
       program: "SweepPad",
     })).pipe(this.output);
 
-    this.pipe(splitter.channels[2]).pipe(new MIDIFilter(this.timeline, (data) => {
+    this.pipe(splitter.channels[2]).pipe(this.filter((data) => {
       return this.ticksPerBeat <= data.ticks;
-    })).pipe(new MIDIStutter(this.timeline, 1 / 2)).pipe(new MIDIExtend(this.timeline, {
+    })).pipe(this.stutter(1 / 2)).pipe(this.extend({
       program: "ShadowString",
     })).pipe(this.output);
   }

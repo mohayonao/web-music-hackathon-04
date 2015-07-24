@@ -1,5 +1,14 @@
 import EventEmitter from "@mohayonao/event-emitter";
 import MIDIEffect from "./MIDIEffect";
+import MIDIDelay from "./effects/MIDIDelay";
+import MIDIDuplicate from "./effects/MIDIDuplicate";
+import MIDIExtend from "./effects/MIDIExtend";
+import MIDIFilter from "./effects/MIDIFilter";
+import MIDIGate from "./effects/MIDIGate";
+import MIDIMap from "./effects/MIDIMap";
+import MIDISplit from "./effects/MIDISplit";
+import MIDIStutter from "./effects/MIDIStutter";
+import MIDITouch from "./effects/MIDITouch";
 import config from "../config";
 
 export default class Track extends EventEmitter {
@@ -63,5 +72,41 @@ export default class Track extends EventEmitter {
       }
     }
     return next;
+  }
+
+  delay(interval = 1 / 8) {
+    return new MIDIDelay(this.timeline, interval);
+  }
+
+  duplicate(count = 2) {
+    return new MIDIDuplicate(this.timeline, count);
+  }
+
+  extend(extend = {}) {
+    return new MIDIExtend(this.timeline, extend);
+  }
+
+  filter(callback) {
+    return new MIDIFilter(this.timeline, callback);
+  }
+
+  gate(gate) {
+    return new MIDIGate(this.timeline, gate);
+  }
+
+  map(callback) {
+    return new MIDIMap(this.timeline, callback);
+  }
+
+  split(callback) {
+    return new MIDISplit(this.timeline, callback);
+  }
+
+  stutter(interval = 1 / 2) {
+    return new MIDIStutter(this.timeline, interval);
+  }
+
+  touch(callback) {
+    return new MIDITouch(this.timeline, callback);
   }
 }

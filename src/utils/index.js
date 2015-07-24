@@ -62,6 +62,84 @@ function once(func) {
   };
 }
 
+function range(value) {
+  let a = [];
+
+  if (typeof value === "string") {
+    return rangeFromString(value);
+  } else if (typeof value === "number") {
+    return rangeFromNumber(value);
+  }
+
+  return a;
+}
+
+function rangeFromNumber(value) {
+  let a = [];
+  let first = 0;
+  let last = value;
+  let step = (first < last) ? +1 : -1;
+  let i = 0;
+  let x = first;
+
+  while (x <= last) {
+    a[i++] = x;
+    x += step;
+  }
+
+  return a;
+}
+
+const RangeRE = /^\s*(?:([-+]?(?:\d+|\d+\.\d+))\s*,\s*)?([-+]?(?:\d+|\d+\.\d+))(?:\s*\.\.(\.?)\s*([-+]?(?:\d+|\d+\.\d+)))?\s*$/;
+
+function rangeFromString(value) {
+  let m;
+
+  if ((m = RangeRE.exec(value)) === null) {
+    return [];
+  }
+
+  let a = [];
+  let first, last, step;
+
+  if (typeof m[4] === "undefined") {
+    first = 0;
+    last = +m[2];
+    step = (0 < last) ? +1 : -1;
+  } else if (typeof m[1] === "undefined") {
+    first = +m[2];
+    last = +m[4];
+    step = (first < last) ? +1 : -1;
+  } else {
+    first = +m[1];
+    last = +m[4];
+    step = +m[2] - first;
+  }
+
+  let i = 0;
+  let x = first;
+
+  if (m[3] && 0 < step) {
+    while (x < last) {
+      a[i++] = x; x += step;
+    }
+  } else if (m[3]) {
+    while (x > last) {
+      a[i++] = x; x += step;
+    }
+  } else if (0 < step) {
+    while (x <= last) {
+      a[i++] = x; x += step;
+    }
+  } else {
+    while (x >= last) {
+      a[i++] = x; x += step;
+    }
+  }
+
+  return a;
+}
+
 function removeIfExists(list, value) {
   let index = list.indexOf(value);
 
@@ -70,8 +148,8 @@ function removeIfExists(list, value) {
   }
 }
 
-function sample(list) {
-  return list[(Math.random() * list.length)|0];
+function sample(list, rand = Math.random()) {
+  return list[(rand() * list.length)|0];
 }
 
 function symbol(str) {
@@ -88,6 +166,20 @@ function wrapAt(list, index) {
   return list[index];
 }
 
+function wsample(list, weights, rand = Math.random()) {
+  let sum = 0;
+
+  let weightsSum = weights.reduce((a, b) => a + b, 0);
+
+  for (let i = 0, imax = weights.length; i < imax; ++i) {
+    sum += weights[i] / weightsSum;
+    if (sum >= rand()) {
+      return this[i];
+    }
+  }
+  return this[weights.length - 1];
+}
+
 export default {
   appendIfNotExists,
   constrain,
@@ -99,8 +191,10 @@ export default {
   linlin,
   midicps,
   once,
+  range,
   removeIfExists,
   sample,
   symbol,
   wrapAt,
+  wsample,
 };
