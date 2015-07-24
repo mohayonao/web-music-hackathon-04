@@ -1,6 +1,6 @@
 import Router from "./Router";
 import config from "./config";
-import utils from "../utils";
+import utils from "./utils";
 import RemoteKeyboard from "../../utils/RemoteKeyboard";
 
 function run(app, socket) {

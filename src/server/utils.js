@@ -1,6 +1,5 @@
 import path from "path";
 import dgram from "dgram";
-import xtend from "xtend";
 import OscMessage from "osc-msg";
 import { Dispatcher } from "@mohayonao/dispatcher";
 import MIDIKeyboard from "@mohayonao/midi-keyboard";
@@ -98,7 +97,7 @@ function setLED(track, color) {
   }
 }
 
-export default xtend(utils, {
+export default utils.xtend(utils, {
   dispatcher,
   useLaunchControl: utils.once(useLaunchControl),
   useMIDIKeyboard: utils.once(useMIDIKeyboard),

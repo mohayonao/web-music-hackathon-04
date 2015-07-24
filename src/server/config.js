@@ -1,7 +1,7 @@
-import xtend from "xtend";
+import utils from "./utils";
 import config from "../config";
 
-export default xtend(config, {
+export default utils.xtend(config, {
   SERVER_PORT: 3000,
   OSC_SEND_HOST: "127.0.0.1",
   OSC_SEND_PORT: 7401,
