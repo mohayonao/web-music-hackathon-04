@@ -1,15 +1,15 @@
 import MIDIEffect from "../MIDIEffect";
 
 export default class MIDIFilter extends MIDIEffect {
-  constructor(timeline, filter) {
+  constructor(timeline, callback) {
     super(timeline);
 
     this.timeline = timeline;
-    this.filter = filter;
+    this.callback = callback;
   }
 
   process(data, next) {
-    if (this.filter(data)) {
+    if (this.callback(data)) {
       next(data);
     }
   }

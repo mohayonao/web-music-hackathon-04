@@ -1,11 +1,11 @@
-import Track0 from "./Track0";
-import Track1 from "./Track1";
-import Track2 from "./Track2";
-import Track3 from "./Track3";
-import Track4 from "./Track4";
-import Track5 from "./Track5";
-import Track6 from "./Track6";
-import Track7 from "./Track7";
+import Track0 from "./Track0_Basic";
+import Track1 from "./Track1_Soft";
+import Track2 from "./Track2_Hard";
+import Track3 from "./Track3_Pad";
+import Track4 from "./Track4_Bass";
+import Track5 from "./Track5_Delay";
+import Track6 from "./Track6_Noise";
+import Track7 from "./Track7_Effect";
 
 export default {
   tracks: [
