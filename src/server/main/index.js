@@ -1,7 +1,7 @@
 import Router from "./Router";
 import config from "./config";
 import utils from "../utils";
-import RemoteKeyboard from "../RemoteKeyboard";
+import RemoteKeyboard from "../../utils/RemoteKeyboard";
 
 function run(app, socket) {
   let router = new Router(socket);
