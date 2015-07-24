@@ -14,7 +14,7 @@ export default class DelayTone extends Instrument {
   static getEnabledParams() {
     return [
       0, 0, 0, 0, 0, 0, 0, 0,
-      0, 0, 0, 0, 0, 0, 0, 1,
+      1, 0, 0, 0, 0, 0, 0, 0,
     ];
   }
 
@@ -50,7 +50,7 @@ export default class DelayTone extends Instrument {
   }
 
   [NOTE_OFF](t1) {
-    let t2 = t1 + utils.linlin(this.params[15], 0, 127, 0.1, 4);
+    let t2 = t1 + utils.linlin(this.params[8], 0, 127, 0.1, 4);
 
     this.osc.stop(t2);
 
