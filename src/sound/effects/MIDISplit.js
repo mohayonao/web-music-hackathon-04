@@ -1,6 +1,6 @@
 import MIDIEffect from "../MIDIEffect";
 
-export default class MIDISplitter extends MIDIEffect {
+export default class MIDISplit extends MIDIEffect {
   constructor(timeline, callback) {
     super(timeline);
 

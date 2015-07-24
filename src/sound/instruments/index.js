@@ -1,11 +1,14 @@
 import AnalogBass from "./AnalogBass";
 import Beep from "./Beep";
+import DecayNoise from "./DecayNoise";
 import DelayTone from "./DelayTone";
 import Distorted from "./Distorted";
-import FMPiano from "./FMPiano";
 import FMBass from "./FMBass";
+import FMPiano from "./FMPiano";
+import ImpulseNoise from "./ImpulseNoise";
 import PlasticHarp from "./PlasticHarp";
 import PureVibes from "./PureVibes";
+import SAHFilteredNoise from "./SAHFilteredNoise";
 import ShadowString from "./ShadowString";
 import SimpleSine from "./SimpleSine";
 import SineTone from "./SineTone";
@@ -19,12 +22,15 @@ import utils from "../utils";
 let presets = {
   AnalogBass,
   Beep,
+  DecayNoise,
   DelayTone,
   Distorted,
-  FMPiano,
   FMBass,
+  FMPiano,
+  ImpulseNoise,
   PlasticHarp,
   PureVibes,
+  SAHFilteredNoise,
   ShadowString,
   SimpleSine,
   SineTone,
@@ -43,12 +49,15 @@ function getClass(program) {
   return utils.sample([
     AnalogBass,
     Beep,
+    DecayNoise,
     DelayTone,
     Distorted,
-    FMPiano,
     FMBass,
+    FMPiano,
+    ImpulseNoise,
     PlasticHarp,
     PureVibes,
+    SAHFilteredNoise,
     ShadowString,
     SimpleSine,
     SineTone,

@@ -1,7 +1,7 @@
 import MIDIEffect from "../MIDIEffect";
 import xtend from "xtend";
 
-export default class MIDIDuplicator extends MIDIEffect {
+export default class MIDIDuplicate extends MIDIEffect {
   constructor(timeline, count) {
     super(timeline);
 
