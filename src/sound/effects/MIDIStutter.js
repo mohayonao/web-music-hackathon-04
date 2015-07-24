@@ -1,5 +1,5 @@
 import MIDIEffect from "../MIDIEffect";
-import xtend from "xtend";
+import utils from "./utils";
 
 export default class MIDIStutter extends MIDIEffect {
   constructor(timeline, interval) {
@@ -23,10 +23,10 @@ export default class MIDIStutter extends MIDIEffect {
     let ticks = this.ticksPerBeat * this.interval;
     let duration = this._ticksToSeconds(ticks);
     let numOfStutter = Math.ceil(data.ticks / ticks);
-    let splittedData = xtend(data, { ticks, duration });
+    let splittedData = utils.xtend(data, { ticks, duration });
 
     function $next({ playbackTime }) {
-      next(xtend(splittedData, { playbackTime }));
+      next(utils.xtend(splittedData, { playbackTime }));
     }
 
     for (let i = 0; i < numOfStutter; i++) {

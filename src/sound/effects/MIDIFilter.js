@@ -1,4 +1,5 @@
 import MIDIEffect from "../MIDIEffect";
+// import utils from "./utils";
 
 export default class MIDIFilter extends MIDIEffect {
   constructor(timeline, callback) {

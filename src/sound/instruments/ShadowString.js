@@ -2,7 +2,7 @@ import Instrument, { INITIALIZE, CREATE, NOTE_ON, NOTE_OFF, DISPOSE } from "../I
 // import Envelope from "@mohayonao/envelope";
 // import Operator from "@mohayonao/operator";
 // import FMSynth from "@mohayonao/fm-synth";
-import utils from "../utils";
+import utils from "./utils";
 import ChorusStrings from "@mohayonao/wave-tables/ChorusStrings";
 
 const RELEASE_TIME = 1.25;
@@ -19,7 +19,7 @@ export default class ShadowString extends Instrument {
     this.osc1 = this.audioContext.createOscillator();
     this.osc1.setPeriodicWave(this.wave);
     this.osc1.frequency.value = frequency * 0.5;
-    this.osc1.detune.value = utils.finedetune(-2);
+    this.osc1.detune.value = utils.findet(-2);
     this.osc1.onended = () => {
       this.emit("ended");
     };
@@ -27,7 +27,7 @@ export default class ShadowString extends Instrument {
     this.osc2 = this.audioContext.createOscillator();
     this.osc2.setPeriodicWave(this.wave);
     this.osc2.frequency.value = frequency * 0.5;
-    this.osc2.detune.value = utils.finedetune(+2);
+    this.osc2.detune.value = utils.findet(+2);
 
     this.filter = this.audioContext.createBiquadFilter();
     this.filter.type = "lowpass";

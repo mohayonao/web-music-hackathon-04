@@ -1,6 +1,5 @@
 import Track from "../Track";
-import xtend from "xtend";
-import utils from "../utils";
+import utils from "./utils";
 
 export default class Track6 extends Track {
   constructor(...args) {
@@ -11,14 +10,14 @@ export default class Track6 extends Track {
         return;
       }
 
-      let program = utils.wsample([
+      let program = utils.sample([
         "WindMachine",
         "DecayNoise",
         "ImpulseNoise",
         "SAHFilteredNoise",
       ]);
 
-      next(xtend(data, { program }));
+      next(utils.xtend(data, { program }));
     }).pipe(this.output);
   }
 }

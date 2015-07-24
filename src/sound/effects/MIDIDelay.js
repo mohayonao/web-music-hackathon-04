@@ -1,6 +1,5 @@
 import MIDIEffect from "../MIDIEffect";
-import xtend from "xtend";
-import utils from "../utils";
+import utils from "./utils";
 
 export default class MIDIDelay extends MIDIEffect {
   constructor(timeline, interval) {
@@ -28,7 +27,7 @@ export default class MIDIDelay extends MIDIEffect {
       let gain = data.gain * this.feedback;
 
       if (0.05 <= gain) {
-        this.process(xtend(data, { playbackTime, gain }), next);
+        this.process(utils.xtend(data, { playbackTime, gain }), next);
       }
     });
   }

@@ -1,6 +1,5 @@
 import Track from "../Track";
-import xtend from "xtend";
-import utils from "../utils";
+import utils from "./utils";
 
 export default class Track7 extends Track {
   constructor(...args) {
@@ -15,7 +14,7 @@ export default class Track7 extends Track {
         "TwinklePad",
       ]);
 
-      next(xtend(data, { program }));
+      next(utils.xtend(data, { program }));
     }).pipe(this.output);
   }
 }

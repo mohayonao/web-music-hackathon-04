@@ -2,7 +2,7 @@ import Instrument, { INITIALIZE, CREATE, NOTE_ON, NOTE_OFF, DISPOSE } from "../I
 import Envelope from "@mohayonao/envelope";
 // import Operator from "@mohayonao/operator";
 // import FMSynth from "@mohayonao/fm-synth";
-import utils from "../utils";
+import utils from "./utils";
 
 const RELEASE_TIME = 0.125;
 const GAIN_UP = 0.75;
@@ -48,8 +48,8 @@ export default class SimpleSine extends Instrument {
   detune() {
     let fine = utils.linlin(this.params[0], 0, 127, 0.5, 8);
 
-    this.osc1.detune.value = utils.finedetune(-fine);
-    this.osc2.detune.value = utils.finedetune(+fine);
+    this.osc1.detune.value = utils.findet(-fine);
+    this.osc2.detune.value = utils.findet(+fine);
   }
 
   ["/param:0"]() {

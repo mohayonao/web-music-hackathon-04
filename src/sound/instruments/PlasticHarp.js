@@ -2,7 +2,7 @@ import Instrument, { INITIALIZE, CREATE, NOTE_ON, NOTE_OFF, DISPOSE } from "../I
 import Envelope from "@mohayonao/envelope";
 import Operator from "@mohayonao/operator";
 import FMSynth from "@mohayonao/fm-synth";
-import utils from "../utils";
+import utils from "./utils";
 
 const DECAY_TIME = 2.0;
 const RELEASE_TIME = 0.5;
@@ -22,7 +22,7 @@ export default class PlasticHarp extends Instrument {
 
     opA.type = "triangle";
     opA.frequency.value = frequency;
-    opA.detune.value = utils.finedetune(-8);
+    opA.detune.value = utils.findet(-8);
     opA.setEnvelope(Envelope.r(2.500));
 
     opB.type = "sine";
@@ -31,7 +31,7 @@ export default class PlasticHarp extends Instrument {
 
     opC.type = "triangle";
     opC.frequency.value = frequency;
-    opC.detune.value = utils.finedetune(+8);
+    opC.detune.value = utils.findet(+8);
     opC.setEnvelope(Envelope.r(2.500));
 
     opD.type = "sine";

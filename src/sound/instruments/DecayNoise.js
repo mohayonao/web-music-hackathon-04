@@ -2,7 +2,7 @@ import Instrument, { INITIALIZE, CREATE, NOTE_ON, NOTE_OFF, DISPOSE } from "../I
 // import Envelope from "@mohayonao/envelope";
 // import Operator from "@mohayonao/operator";
 // import FMSynth from "@mohayonao/fm-synth";
-import utils from "../utils";
+import utils from "./utils";
 
 const RELEASE_TIME = 0.125;
 const GAIN_UP = 1;

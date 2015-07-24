@@ -2,7 +2,7 @@ import Instrument, { INITIALIZE, CREATE, NOTE_ON, NOTE_OFF, DISPOSE } from "../I
 import Envelope from "@mohayonao/envelope";
 import Operator from "@mohayonao/operator";
 import FMSynth from "@mohayonao/fm-synth";
-import utils from "../utils";
+import utils from "./utils";
 
 const RELEASE_TIME = 0.750;
 const GAIN_UP = 2.5;
@@ -18,19 +18,19 @@ export default class FMPiano extends Instrument {
     let opD = new Operator(this.audioContext);
 
     opA.frequency.value = frequency;
-    opA.detune.value = utils.finedetune(-2);
+    opA.detune.value = utils.findet(-2);
     opA.setEnvelope(Envelope.r(7.16, utils.dbamp(-7.9)));
 
     opB.frequency.value = frequency * 14;
-    opB.detune.value = utils.finedetune(2);
+    opB.detune.value = utils.findet(2);
     opB.setEnvelope(Envelope.r(1.60, utils.dbamp(-40) * frequency * this.volume * 20));
 
     opC.frequency.value = frequency;
-    opC.detune.value = utils.finedetune(3);
+    opC.detune.value = utils.findet(3);
     opC.setEnvelope(Envelope.r(7.16, utils.dbamp(-6.7)));
 
     opD.frequency.value = frequency;
-    opD.detune.value = utils.finedetune(1);
+    opD.detune.value = utils.findet(1);
     opD.setEnvelope(Envelope.r(7.16, utils.dbamp(-24) * frequency * this.volume * 20));
 
     this.fmsynth = new FMSynth(7, [ opA, opB, opC, opD ]);

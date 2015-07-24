@@ -1,6 +1,5 @@
 import Track from "../Track";
-import xtend from "xtend";
-import utils from "../utils";
+import utils from "./utils";
 
 export default class Track4 extends Track {
   constructor(...args) {
@@ -16,7 +15,7 @@ export default class Track4 extends Track {
         "FMBass",
       ]);
 
-      next(xtend(data, { program }));
+      next(utils.xtend(data, { program }));
     }).pipe(this.output);
   }
 }
