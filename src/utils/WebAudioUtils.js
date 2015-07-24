@@ -1,6 +1,6 @@
 let audioContext = null;
 
-function getContext() {
+function getAudioContext() {
   if (audioContext === null) {
     audioContext = new global.AudioContext();
   }
@@ -111,11 +111,22 @@ function createWhiteNoise(duration = 4, rand = Math.random) {
   return buffer;
 }
 
+function loadAudioData(path) {
+  return new Promise((resolve, reject) => {
+    global.fetch(path).then((res) => {
+      return res.arrayBuffer();
+    }).then((audioData) => {
+      audioContext.decodeAudioData(audioData, resolve, reject);
+    });
+  });
+}
+
 export default {
-  getContext,
+  getAudioContext,
   chore,
   createColoredWave,
   createWave,
   createPinkNoise,
   createWhiteNoise,
+  loadAudioData,
 };
