@@ -1,5 +1,5 @@
 import BaseSoundDispatcher from "../SoundDispatcher";
-import utils from "../utils";
+import utils from "./utils";
 
 export default class SoundDispatcher extends BaseSoundDispatcher {
   constructor(...args) {

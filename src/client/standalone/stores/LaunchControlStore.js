@@ -1,6 +1,6 @@
 import fluxx from "@mohayonao/remote-fluxx";
 import sound from "../../../sound";
-import utils from "../../utils";
+import utils from "../utils";
 import config from "../config";
 
 export default class LaunchControlStore extends fluxx.Store {

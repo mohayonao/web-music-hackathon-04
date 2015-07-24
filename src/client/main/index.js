@@ -1,8 +1,7 @@
 import Router from "./Router";
 import MainApp from "./components/MainApp";
-import WebAudioUtils from "../../utils/WebAudioUtils";
 import Visualizer from "./Visualizer";
-import utils from "../utils";
+import utils from "./utils";
 
 function run() {
   let socket = window.io();
@@ -24,7 +23,7 @@ function run() {
   }
 
   router.syncTime();
-  WebAudioUtils.chore();
+  utils.chore();
 
   router.on("statechange", (state) => {
     if (state === "running") {

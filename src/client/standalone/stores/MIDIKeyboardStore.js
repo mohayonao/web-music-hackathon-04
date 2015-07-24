@@ -1,6 +1,6 @@
 import fluxx from "@mohayonao/remote-fluxx";
 import sound from "../../../sound";
-import utils from "../../utils";
+import utils from "../utils";
 
 export default class MIDIKeyboardStore extends fluxx.Store {
   get name() {

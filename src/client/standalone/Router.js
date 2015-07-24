@@ -1,8 +1,6 @@
 import fluxx from "@mohayonao/remote-fluxx";
-import xtend from "xtend";
 import WorkerTimer from "worker-timer";
-import Timeline from "../../utils/Timeline";
-import WebAudioUtils from "../../utils/WebAudioUtils";
+import utils, { Timeline } from "./utils";
 import SoundCreator from "../SoundCreator";
 import SoundDispatcher from "./SoundDispatcher";
 import SoundManager from "../SoundManager";
@@ -15,7 +13,7 @@ export default class Router extends fluxx.Router {
   constructor() {
     super();
 
-    this.audioContext = WebAudioUtils.getContext();
+    this.audioContext = utils.getAudioContext();
     this.timeline = new Timeline({
       context: this.audioContext,
       timerAPI: WorkerTimer,
@@ -63,7 +61,7 @@ export default class Router extends fluxx.Router {
     }
 
     this.tracks.forEach((track) => {
-      track.setState(xtend(state.sequencer, state.launchControl));
+      track.setState(utils.xtend(state.sequencer, state.launchControl));
     });
 
     this.params = state.launchControl.params;
