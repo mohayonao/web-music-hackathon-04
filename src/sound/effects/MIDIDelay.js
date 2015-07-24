@@ -1,9 +1,10 @@
-import EventEmitter from "@mohayonao/event-emitter";
+import MIDIEffect from "../MIDIEffect";
 import xtend from "xtend";
+import utils from "../utils";
 
-export default class MIDIDelay extends EventEmitter {
+export default class MIDIDelay extends MIDIEffect {
   constructor(timeline, interval) {
-    super();
+    super(timeline);
 
     this.timeline = timeline;
     this.feedback = 0;
@@ -12,16 +13,14 @@ export default class MIDIDelay extends EventEmitter {
     this.interval = interval;
   }
 
-  push(data) {
-    this._process(xtend(data, { gain: 1 }));
-  }
-
   _ticksToSeconds(ticks) {
-    return (ticks / 120) * (60 / this.tempo);
+    return (ticks / this.ticksPerBeat) * (60 / this.tempo);
   }
 
-  _process(data) {
-    this.emit("play", data);
+  process(data, next) {
+    data.gain = utils.defaults(data.gain, 1);
+
+    next(data);
 
     let delayTime = this._ticksToSeconds(this.ticksPerBeat * this.interval);
 
@@ -29,7 +28,7 @@ export default class MIDIDelay extends EventEmitter {
       let gain = data.gain * this.feedback;
 
       if (0.05 <= gain) {
-        this._process(xtend(data, { playbackTime, gain }));
+        this.process(xtend(data, { playbackTime, gain }), next);
       }
     });
   }

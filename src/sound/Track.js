@@ -1,9 +1,6 @@
 import EventEmitter from "@mohayonao/event-emitter";
-import utils from "./utils";
 import config from "../config";
-
-export const PROCESS = utils.symbol("PROCESS");
-export const UPDATE_STATE = utils.symbol("UPDATE_STATE");
+import utils from "./utils";
 
 export default class Track extends EventEmitter {
   constructor(timeline) {
@@ -13,20 +10,34 @@ export default class Track extends EventEmitter {
     this.ticksPerBeat = 480;
     this.tempo = 120;
     this.params = new Uint8Array(config.DEFAULT_PARAMS);
+    this.output = {
+      push: (data) => {
+        this.emit("play", data);
+      },
+    };
+
+    this._pipe = [];
   }
 
   setState({ ticksPerBeat, tempo, params }) {
     this.ticksPerBeat = ticksPerBeat;
     this.tempo = tempo;
     this.params = params;
-    this[UPDATE_STATE]({ ticksPerBeat, tempo, params });
   }
 
   push(data) {
-    this[PROCESS](data);
+    this._pipe.forEach((next) => {
+      next.push(data);
+    });
   }
 
-  [UPDATE_STATE]() {}
+  pipe(next) {
+    utils.appendIfNotExists(this._pipe, next);
+    return next;
+  }
 
-  [PROCESS]() {}
+  unpipe(next) {
+    utils.removeIfExists(this._pipe, next);
+    return next;
+  }
 }

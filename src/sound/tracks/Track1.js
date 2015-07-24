@@ -1,5 +1,4 @@
-import Track, { PROCESS } from "../Track";
+import Track from "../Track";
 
 export default class Track1 extends Track {
-  [PROCESS]() {}
 }
