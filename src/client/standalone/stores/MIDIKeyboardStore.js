@@ -19,6 +19,12 @@ export default class MIDIKeyboardStore extends fluxx.Store {
     };
   }
 
+  ["/storage/get"]({ midiKeyboardDeviceName, midiKeyboardPresetName }) {
+    this.data.deviceName = midiKeyboardDeviceName;
+    this.data.presetName = midiKeyboardPresetName;
+    this.emitChange(0);
+  }
+
   ["/midi-keyboard/preset"]({ presetName }) {
     this.data.presetName = presetName;
     this.emitChange();

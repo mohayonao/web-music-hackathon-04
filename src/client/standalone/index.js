@@ -1,15 +1,14 @@
 import StandaloneApp from "./components/StandaloneApp";
 import Router from "./Router";
 import WebAudioUtils from "../../utils/WebAudioUtils";
-import config from "./config";
 
 function run() {
   let router = new Router();
 
   WebAudioUtils.chore();
 
-  router.createAction("/sound/load/score", { name: config.DEFAULT_SONG });
   router.createAction("/midi-device/request");
+  router.createAction("/storage/get");
 
   React.render(
     React.createElement(StandaloneApp, { router }),

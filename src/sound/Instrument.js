@@ -21,7 +21,7 @@ export default class Instrument extends EventEmitter {
     this.outlet = null;
     this.inlet = null;
     this.state = "uninitialized";
-    this.params = params;
+    this.params = new Uint8Array(params);
   }
 
   static getEnabledParams() {

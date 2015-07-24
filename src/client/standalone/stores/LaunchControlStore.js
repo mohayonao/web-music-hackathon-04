@@ -15,6 +15,12 @@ export default class LaunchControlStore extends fluxx.Store {
     };
   }
 
+  ["/storage/get"]({ launchControlDeviceName, launchControlParams }) {
+    this.data.deviceName = launchControlDeviceName;
+    this.data.params = new Uint8Array(launchControlParams);
+    this.emitChange(0);
+  }
+
   ["/launch-control/pad"]({ track }) {
     track = utils.constrain(track, 0, 7)|0;
 

@@ -1,15 +1,15 @@
 import MIDIEffect from "../MIDIEffect";
 
 export default class MIDIMap extends MIDIEffect {
-  constructor(timeline, touch) {
+  constructor(timeline, callback) {
     super(timeline);
 
     this.timeline = timeline;
-    this.touch = touch;
+    this.callback = callback;
   }
 
   process(data, next) {
-    this.touch(data);
+    this.callback(data);
     next(data);
   }
 }
