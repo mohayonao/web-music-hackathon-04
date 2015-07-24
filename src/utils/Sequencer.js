@@ -97,7 +97,8 @@ export default class Sequencer extends EventEmitter {
           track: item.track,
           noteNumber: item.noteNumber,
           velocity: item.velocity,
-          duration: this._ticksToSeconds(item.duration),
+          ticks: item.ticks,
+          duration: this._ticksToSeconds(item.ticks),
         };
       }));
     }
