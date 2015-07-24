@@ -38,17 +38,6 @@ function finedetune(fine) {
   return sign * Math.log((Math.abs(fine) + 1000) / 1000) / Math.log(Math.pow(2, 1 / 12)) * 100;
 }
 
-function getItem(object, keys) {
-  for (let i = 0, imax = keys.length; i < imax; i++) {
-    if (typeof object[keys[i]] === "undefined") {
-      return null;
-    }
-    object = object[keys[i]];
-  }
-
-  return object;
-}
-
 function linexp(value, inMin, inMax, outMin, outMax) {
   return Math.pow(outMax / outMin, (value - inMin) / (inMax - inMin)) * outMin;
 }
@@ -81,50 +70,8 @@ function removeIfExists(list, value) {
   }
 }
 
-function removeItem(object, keys) {
-  if (keys.length === 0) {
-    return object;
-  }
-
-  for (let i = 0, imax = keys.length - 1; i < imax; i++) {
-    if (typeof object[keys[i]] === "undefined") {
-      return null;
-    }
-    object = object[keys[i]];
-  }
-
-  if (object === null || typeof object !== "object") {
-    return null;
-  }
-
-  let value = object[keys[keys.length - 1]];
-
-  delete object[keys[keys.length - 1]];
-
-  return value;
-}
-
 function sample(list) {
   return list[(Math.random() * list.length)|0];
-}
-
-function setItem(object, value, keys) {
-  if (keys.length === 0) {
-    return object;
-  }
-
-  for (let i = 0, imax = keys.length - 1; i < imax; i++) {
-    if (typeof object[keys[i]] === "undefined") {
-      return null;
-    }
-    object = object[keys[i]];
-  }
-
-  if (object === null || typeof object !== "object") {
-    return null;
-  }
-
-  return (object[keys[keys.length - 1]] = value);
 }
 
 function symbol(str) {
@@ -148,15 +95,12 @@ export default {
   debounce,
   defaults,
   finedetune,
-  getItem,
   linexp,
   linlin,
   midicps,
   once,
   removeIfExists,
-  removeItem,
   sample,
-  setItem,
   symbol,
   wrapAt,
 };

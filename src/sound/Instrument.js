@@ -8,15 +8,16 @@ export const NOTE_OFF = utils.symbol("NOTE_OFF");
 export const DISPOSE = utils.symbol("DISPOSE");
 
 export default class Instrument extends EventEmitter {
-  constructor({ audioContext, timeline, params, noteNumber, velocity, duration }) {
+  constructor({ audioContext, timeline, params, noteNumber, velocity, gain, duration }) {
     super();
 
     this.audioContext = audioContext;
     this.timeline = timeline;
     this.noteNumber = utils.defaults(noteNumber, 69);
     this.velocity = utils.defaults(velocity, 100);
+    this.gain = utils.defaults(gain, 1);
     this.duration = utils.defaults(duration, Infinity);
-    this.volume = utils.linexp(this.velocity, 0, 127, 0.25, 1);
+    this.volume = utils.linexp(this.velocity, 0, 127, 0.25, 1) * this.gain;
     this.outlet = null;
     this.inlet = null;
     this.state = "uninitialized";

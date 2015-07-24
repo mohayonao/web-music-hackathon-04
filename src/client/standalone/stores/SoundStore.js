@@ -6,7 +6,7 @@ export default class SoundStore extends fluxx.Store {
 
     this.soundManager = this.router.soundManager;
 
-    this._presetName = "random";
+    this._presetName = "Routing";
   }
 
   getInitialState() {

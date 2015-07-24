@@ -1,4 +1,5 @@
 import fluxx from "@mohayonao/remote-fluxx";
+import xtend from "xtend";
 import WorkerTimer from "worker-timer";
 import Timeline from "../../utils/Timeline";
 import WebAudioUtils from "../../utils/WebAudioUtils";
@@ -36,7 +37,7 @@ export default class Router extends fluxx.Router {
     });
 
     this.tracks = sound.tracks.tracks.map((Track) => {
-      return new Track(this).on("play", (data) => {
+      return new Track(this.timeline).on("play", (data) => {
         this.soundCreator.push(data);
       });
     });
@@ -61,7 +62,12 @@ export default class Router extends fluxx.Router {
       this.timeline.stop(true);
     }
 
+    this.tracks.forEach((track) => {
+      track.setState(xtend(state.sequencer, state.launchControl));
+    });
+
     this.params = state.launchControl.params;
+    this.soundCreator.setParams(this.params);
   }
 
   play(data) {
@@ -69,7 +75,7 @@ export default class Router extends fluxx.Router {
       return;
     }
 
-    if (data.program) {
+    if (data.program && data.program !== "Routing") {
       this.soundCreator.push(data);
       return;
     }

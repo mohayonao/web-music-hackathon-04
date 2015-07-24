@@ -42,14 +42,6 @@ export default class Sequencer extends EventEmitter {
     this._ticksPerBeat = utils.constrain(value, 15, 1920)|0;
   }
 
-  setData(data) {
-    Object.keys(data).forEach((key) => {
-      this[key] = data[key];
-    });
-    this._index = 0;
-    this._ticks = 0;
-  }
-
   start() {
     if (this.state === "running") {
       return;
@@ -68,6 +60,11 @@ export default class Sequencer extends EventEmitter {
     this.timeline.remove(this._schedId);
     this.state = "suspended";
     this.emit("statechange", this.state);
+  }
+
+  reset() {
+    this._index = 0;
+    this._ticks = 0;
   }
 
   _ticksToSeconds(ticks) {
