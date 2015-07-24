@@ -68,6 +68,14 @@ export default class Router extends fluxx.Router {
 
     this.params = state.launchControl.params;
     this.soundCreator.setParams(this.params);
+
+    this.createAction("/storage/set", {
+      song: state.sequencer.song,
+      launchControlDeviceName: state.launchControl.deviceName,
+      launchControlParams: [].slice.call(state.launchControl.params),
+      midiKeyboardDeviceName: state.midiKeyboard.deviceName,
+      midiKeyboardPresetName: state.midiKeyboard.presetName,
+    });
   }
 
   play(data) {
