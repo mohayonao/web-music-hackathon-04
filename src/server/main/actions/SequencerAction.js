@@ -12,4 +12,12 @@ export default class SequencerAction extends fluxx.Action {
   ["/sequencer/change/tempo"]({ tempo, delta }) {
     this.doneAction("/sequencer/change/tempo", { tempo, delta });
   }
+
+  ["/osc/sequencer"]({ args }) {
+    let action = args[0];
+
+    if (action === "start" || action === "stop") {
+      this.doneAction(`/sequencer/${action}`);
+    }
+  }
 }

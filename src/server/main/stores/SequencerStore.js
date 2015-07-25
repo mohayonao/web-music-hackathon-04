@@ -1,5 +1,6 @@
 import fluxx from "@mohayonao/remote-fluxx";
 import { Sequencer } from "../utils";
+import logger from "../../logger";
 import config from "../config";
 
 export default class SequencerStore extends fluxx.Store {
@@ -43,12 +44,14 @@ export default class SequencerStore extends fluxx.Store {
     this.sequencer.start();
     this.data.state = this.sequencer.state;
     this.emitChange();
+    logger.info(`sequencer state: ${this.sequencer.state}`);
   }
 
   ["/sequencer/stop"]() {
     this.sequencer.stop();
     this.data.state = this.sequencer.state;
     this.emitChange();
+    logger.info(`sequencer state: ${this.sequencer.state}`);
   }
 
   ["/sequencer/change/tempo"]({ tempo, delta }) {
@@ -59,5 +62,6 @@ export default class SequencerStore extends fluxx.Store {
     }
     this.data.tempo = this.sequencer.tempo;
     this.emitChange();
+    logger.info(`sequencer tempo: ${this.sequencer.tempo}`);
   }
 }
