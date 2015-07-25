@@ -1,6 +1,6 @@
 import Router from "./Router";
 import MainApp from "./components/MainApp";
-import Visualizer from "./Visualizer";
+import Visualizer2 from "./Visualizer2";
 import utils from "./utils";
 
 function run() {
@@ -8,7 +8,7 @@ function run() {
   let router = new Router(socket);
   let button = document.getElementById("button");
   let canvas = document.getElementById("canvas");
-  let visualizer = new Visualizer(canvas);
+  let visualizer = new Visualizer2(canvas);
 
   switch (utils.getPerformanceLevel()) {
     case 2:
@@ -40,26 +40,31 @@ function run() {
   });
 
   router.on("noteOn", (instance) => {
-    let t0 = Date.now();
-    let duration = instance.duration;
+    // let t0 = Date.now();
+    // let duration = instance.duration;
 
-    function animation(context, t1) {
-      let elapsed = (t1 - t0) * 0.001;
-      let a = utils.constrain(utils.linlin(elapsed, 0, duration, 1, 0), 0, 1);
+    // function animation(context, t1) {
+    //   let elapsed = (t1 - t0) * 0.001;
+    //   let a = utils.constrain(utils.linlin(elapsed, 0, duration, 1, 0), 0, 1);
 
-      if (a === 0) {
-        visualizer.remove(animation);
-      } else {
-        context.fillStyle = `rgba(200, 239, 234, ${a})`;
-        context.fillRect(0, 0, 1, 1);
-      }
-    }
+    //   if (a === 0) {
+    //     visualizer.remove(animation);
+    //   } else {
+    //     context.fillStyle = `rgba(200, 239, 234, ${a})`;
+    //     context.fillRect(0, 0, 1, 1);
+    //   }
+    // }
 
-    visualizer.add(animation);
+    // visualizer.add(animation);
 
-    instance.on("ended", () => {
-      visualizer.remove(animation);
-    });
+    // instance.on("ended", () => {
+    //   visualizer.remove(animation);
+    // });
+  });
+  
+  router.on("soundtest", (buf) => {
+    // visualizer.add(hoge);
+    visualizer.add(buf);
   });
 
   React.render(
