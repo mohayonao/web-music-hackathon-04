@@ -1,5 +1,4 @@
-import xtend from "xtend";
 import utils from "../utils";
 import WebAudioUtils from "../utils/WebAudioUtils";
 
-export default xtend(utils, WebAudioUtils);
+export default utils.xtend(utils, WebAudioUtils);

@@ -17,7 +17,7 @@ import SweepPad from "./SweepPad";
 import TublarBell from "./TublarBell";
 import TwinklePad from "./TwinklePad";
 import WindMachine from "./WindMachine";
-import utils from "../utils";
+import utils from "./utils";
 
 let presets = {
   AnalogBass,

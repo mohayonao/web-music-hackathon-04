@@ -1,5 +1,5 @@
 import MIDIEffect from "../MIDIEffect";
-import xtend from "xtend";
+import utils from "./utils";
 
 export default class MIDIGate extends MIDIEffect {
   constructor(timeline, gate) {
@@ -17,6 +17,6 @@ export default class MIDIGate extends MIDIEffect {
     let ticks = data.ticks * this.gate;
     let duration = data.duration * this.gate;
 
-    next(xtend(data, { ticks, duration }));
+    next(utils.xtend(data, { ticks, duration }));
   }
 }

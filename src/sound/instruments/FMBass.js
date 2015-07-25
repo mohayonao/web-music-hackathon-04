@@ -2,7 +2,7 @@ import Instrument, { INITIALIZE, CREATE, NOTE_ON, NOTE_OFF, DISPOSE } from "../I
 import Envelope from "@mohayonao/envelope";
 import Operator from "@mohayonao/operator";
 import FMSynth from "@mohayonao/fm-synth";
-import utils from "../utils";
+import utils from "./utils";
 
 const RELEASE_TIME = 0.050;
 const GAIN_UP = 0.5;
@@ -16,11 +16,11 @@ export default class FMBass extends Instrument {
     let opB = new Operator(this.audioContext);
 
     opA.frequency.value = frequency;
-    opA.detune.value = utils.finedetune(-2);
+    opA.detune.value = utils.findet(-2);
     opA.setEnvelope(Envelope.asr(0.004, 0, 17.2, utils.dbamp(-0)));
 
     opB.frequency.value = frequency * 0.5;
-    opB.detune.value = utils.finedetune(3);
+    opB.detune.value = utils.findet(3);
     opB.setEnvelope(Envelope.asr(0.008, 0, 10.4, utils.dbamp(-19) * frequency * this.volume * 20));
 
     this.fmsynth = new FMSynth(7, [ opA, opB, 0, 0 ]);

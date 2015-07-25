@@ -1,5 +1,5 @@
-import xtend from "xtend";
+import utils from "./utils";
 import config from "../config";
 
-export default xtend(config, {
+export default utils.xtend(config, {
 });

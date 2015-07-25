@@ -1,9 +1,8 @@
 import fluxx from "@mohayonao/remote-fluxx";
-import xtend from "xtend";
 import logger from "../logger";
 import actions from "./actions";
 import stores from "./stores";
-import utils from "../utils";
+import utils from "./utils";
 import config from "./config";
 import sound from "../../sound";
 import Timeline from "../../utils/Timeline";
@@ -67,7 +66,7 @@ export default class Router extends fluxx.Server {
     }
 
     this.tracks.forEach((track) => {
-      track.setState(xtend(state.sequencer, state.launchControl));
+      track.setState(utils.xtend(state.sequencer, state.launchControl));
     });
 
     this.setParams(state.launchControl.params);

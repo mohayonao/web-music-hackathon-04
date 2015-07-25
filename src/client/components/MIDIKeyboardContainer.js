@@ -1,4 +1,4 @@
-import xtend from "xtend";
+import utils from "../utils";
 import MIDIKeyboardPad from "./MIDIKeyboardPad";
 
 const BLACK_KEYS = [ 1, 3, 6, 8, 10 ];
@@ -10,7 +10,7 @@ export default class MIDIKeyboardContainer extends React.Component {
       let styles = {
         paddingTop: BLACK_KEYS.indexOf(index) !== -1 ? 0 : "58px",
       };
-      let keyData = xtend(data, { value: data.octave * 12 + index });
+      let keyData = utils.xtend(data, { value: data.octave * 12 + index });
 
       return (
         <li className="midi-keyboard-key">

@@ -1,3 +1,9 @@
+import xtend from "xtend";
+import PerlinNoise from "./PerlinNoise";
+import RandGen from "./RandGen";
+import Sequencer from "./Sequencer";
+import Timeline from "./Timeline";
+
 function appendIfNotExists(list, value) {
   let index = list.indexOf(value);
 
@@ -32,7 +38,7 @@ function defaults(value, defaultValue) {
   return typeof value !== "undefined" ? value : defaultValue;
 }
 
-function finedetune(fine) {
+function findet(fine) {
   let sign = fine < 0 ? -1 : +1;
 
   return sign * Math.log((Math.abs(fine) + 1000) / 1000) / Math.log(Math.pow(2, 1 / 12)) * 100;
@@ -148,7 +154,7 @@ function removeIfExists(list, value) {
   }
 }
 
-function sample(list, rand = Math.random()) {
+function sample(list, rand = Math.random) {
   return list[(rand() * list.length)|0];
 }
 
@@ -166,7 +172,7 @@ function wrapAt(list, index) {
   return list[index];
 }
 
-function wsample(list, weights, rand = Math.random()) {
+function wsample(list, weights, rand = Math.random) {
   let sum = 0;
 
   let weightsSum = weights.reduce((a, b) => a + b, 0);
@@ -181,12 +187,19 @@ function wsample(list, weights, rand = Math.random()) {
 }
 
 export default {
+  PerlinNoise,
+  RandGen,
+  Sequencer,
+  Timeline,
+
+  xtend,
+
   appendIfNotExists,
   constrain,
   dbamp,
   debounce,
   defaults,
-  finedetune,
+  findet,
   linexp,
   linlin,
   midicps,

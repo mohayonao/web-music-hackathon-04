@@ -2,7 +2,7 @@ import Instrument, { INITIALIZE, CREATE, NOTE_ON, NOTE_OFF, DISPOSE } from "../I
 import Envelope from "@mohayonao/envelope";
 import Operator from "@mohayonao/operator";
 import FMSynth from "@mohayonao/fm-synth";
-import utils from "../utils";
+import utils from "./utils";
 
 const RELEASE_TIME = 13.000;
 const GAIN_UP = 1;
@@ -20,11 +20,11 @@ export default class TublarBell extends Instrument {
     let opD = new Operator(this.audioContext);
 
     opA.frequency.value = frequency * 3;
-    opA.detune.value = utils.finedetune(500);
+    opA.detune.value = utils.findet(500);
     opA.setEnvelope(Envelope.ds(0.004, utils.dbamp(0), utils.dbamp(0)));
 
     opB.frequency.value = frequency;
-    opB.detune.value = utils.finedetune(250);
+    opB.detune.value = utils.findet(250);
     opB.setEnvelope(Envelope.ds(0.031, utils.dbamp(-14), utils.dbamp(0)));
 
     opC.detune.value = 0;
@@ -32,7 +32,7 @@ export default class TublarBell extends Instrument {
     opC.setEnvelope(Envelope.ds(0.026, utils.dbamp(-28), utils.dbamp(0)));
 
     opD.frequency.value = frequency * 2;
-    opD.detune.value = utils.finedetune(63);
+    opD.detune.value = utils.findet(63);
     opD.setEnvelope(Envelope.ds(3.230, utils.dbamp(-13), utils.dbamp(-17) * frequency * this.volume * 20));
 
     this.fmsynth = new FMSynth(8, [ opA, opB, opC, opD ]);

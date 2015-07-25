@@ -1,5 +1,5 @@
 import fluxx from "@mohayonao/remote-fluxx";
-import Sequencer from "../../../utils/Sequencer";
+import { Sequencer } from "../utils";
 import config from "../config";
 
 export default class SequencerStore extends fluxx.Store {

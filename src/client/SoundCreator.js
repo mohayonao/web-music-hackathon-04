@@ -1,5 +1,4 @@
 import EventEmitter from "@mohayonao/event-emitter";
-import xtend from "xtend";
 import sound from "../sound";
 import config from "./config";
 import utils from "./utils";
@@ -19,7 +18,7 @@ export default class SoundCreator extends EventEmitter {
 
   push(data) {
     if (data.dataType === "sequence") {
-      data = xtend(data, {
+      data = utils.xtend(data, {
         dataType: "noteOn",
         playbackTime: data.playbackTime + this.offsetTime,
       });
@@ -41,7 +40,7 @@ export default class SoundCreator extends EventEmitter {
 
   noteOn(data) {
     let Klass = sound.instruments.getClass(data.program);
-    let instance = new Klass(xtend(data, {
+    let instance = new Klass(utils.xtend(data, {
       audioContext: this.audioContext,
       timeline: this.timeline,
       params: this._params,

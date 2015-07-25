@@ -1,4 +1,5 @@
 import MIDIEffect from "../MIDIEffect";
+// import utils from "./utils";
 
 export default class MIDIMap extends MIDIEffect {
   constructor(timeline, callback) {

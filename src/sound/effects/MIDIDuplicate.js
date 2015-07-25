@@ -1,5 +1,5 @@
 import MIDIEffect from "../MIDIEffect";
-import xtend from "xtend";
+import utils from "./utils";
 
 export default class MIDIDuplicate extends MIDIEffect {
   constructor(timeline, count) {
@@ -11,7 +11,7 @@ export default class MIDIDuplicate extends MIDIEffect {
 
   process(data, next) {
     for (let i = 0, imax = this.count; i < imax; i++) {
-      next(xtend(data));
+      next(utils.xtend(data));
     }
   }
 }

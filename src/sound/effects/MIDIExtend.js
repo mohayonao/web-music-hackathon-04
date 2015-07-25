@@ -1,5 +1,5 @@
 import MIDIEffect from "../MIDIEffect";
-import xtend from "xtend";
+import utils from "./utils";
 
 export default class MIDIExtend extends MIDIEffect {
   constructor(timeline, extend) {
@@ -10,6 +10,6 @@ export default class MIDIExtend extends MIDIEffect {
   }
 
   process(data, next) {
-    next(xtend(data, this.extend));
+    next(utils.xtend(data, this.extend));
   }
 }

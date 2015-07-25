@@ -2,7 +2,7 @@ import Instrument, { INITIALIZE, CREATE, NOTE_ON, NOTE_OFF, DISPOSE } from "../I
 import Envelope from "@mohayonao/envelope";
 import Operator from "@mohayonao/operator";
 import FMSynth from "@mohayonao/fm-synth";
-import utils from "../utils";
+import utils from "./utils";
 
 const RELEASE_TIME = 0.25;
 const GAIN_UP = 0.6;
@@ -20,7 +20,7 @@ export default class Distorted extends Instrument {
     opA.setEnvelope(Envelope.ads(0.005, 0.100, utils.dbamp(-2)));
 
     opB.frequency.value = frequency;
-    opB.detune.value = utils.finedetune(-2);
+    opB.detune.value = utils.findet(-2);
     opB.setEnvelope(Envelope.ads(0.250, 0.500, utils.dbamp(-12), utils.dbamp(-18) * frequency * 50));
 
     opC.frequency.value = frequency;

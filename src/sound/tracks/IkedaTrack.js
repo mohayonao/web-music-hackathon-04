@@ -1,5 +1,5 @@
 import Track from "../Track";
-import xtend from "xtend";
+import utils from "./utils";
 
 export default class IkedaTrack extends Track {
   constructor(...args) {
@@ -9,7 +9,7 @@ export default class IkedaTrack extends Track {
     this.gate = this.gate(2 / 3);
     this.filter = this.filter(() => Math.random() < 0.25);
     this.map = this.map((data) => {
-      return xtend(data, {
+      return utils.xtend(data, {
         noteNumber: (data.noteNumber % 36) + 96,
         program: "SineTone",
       });

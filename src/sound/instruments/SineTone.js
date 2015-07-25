@@ -2,7 +2,7 @@ import Instrument, { INITIALIZE, CREATE, NOTE_ON, NOTE_OFF, DISPOSE } from "../I
 // import Envelope from "@mohayonao/envelope";
 // import Operator from "@mohayonao/operator";
 // import FMSynth from "@mohayonao/fm-synth";
-import utils from "../utils";
+import utils from "./utils";
 
 const RELEASE_TIME = 0.025;
 const GAIN_UP = 1;
@@ -35,10 +35,10 @@ export default class SineTone extends Instrument {
     this.osc1.start(t0);
     this.osc2.start(t0);
 
-    this.osc1.detune.setValueAtTime(utils.finedetune(+10), t0);
+    this.osc1.detune.setValueAtTime(utils.findet(+10), t0);
     this.osc1.detune.linearRampToValueAtTime(0, t0 + 4);
 
-    this.osc2.detune.setValueAtTime(utils.finedetune(-10), t0);
+    this.osc2.detune.setValueAtTime(utils.findet(-10), t0);
     this.osc2.detune.linearRampToValueAtTime(0, t0 + 4);
 
     this.releaseNode.gain.setValueAtTime(this.volume * GAIN_UP, t0);

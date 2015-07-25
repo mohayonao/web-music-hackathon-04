@@ -2,7 +2,7 @@ import Instrument, { INITIALIZE, CREATE, NOTE_ON, NOTE_OFF, DISPOSE } from "../I
 import Envelope from "@mohayonao/envelope";
 // import Operator from "@mohayonao/operator";
 // import FMSynth from "@mohayonao/fm-synth";
-import utils from "../utils";
+import utils from "./utils";
 
 const ATTACK_TIME = 0.005;
 const DECAY_TIME = 0.005;
@@ -29,7 +29,7 @@ export default class DelayTone extends Instrument {
     this.osc = this.audioContext.createOscillator();
     this.osc.setPeriodicWave(this.wave);
     this.osc.frequency.value = frequency;
-    this.osc.detune.value = utils.finedetune(+4);
+    this.osc.detune.value = utils.findet(+4);
     this.osc.onended = () => {
       this.emit("ended");
     };

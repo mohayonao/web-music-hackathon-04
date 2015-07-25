@@ -1,8 +1,7 @@
 import fluxx from "@mohayonao/remote-fluxx";
 import WorkerTimer from "worker-timer";
 import SyncDate from "./SyncDate";
-import Timeline from "../../utils/Timeline";
-import WebAudioUtils from "../../utils/WebAudioUtils";
+import utils, { Timeline } from "./utils";
 import SoundCreator from "../SoundCreator";
 import SoundDispatcher from "./SoundDispatcher";
 import SoundManager from "../SoundManager";
@@ -16,7 +15,7 @@ export default class Router extends fluxx.Client {
 
     this._syncTimes = [];
 
-    this.audioContext = WebAudioUtils.getContext();
+    this.audioContext = utils.getAudioContext();
     this.timeline = new Timeline({
       context: this.audioContext,
       timerAPI: WorkerTimer,

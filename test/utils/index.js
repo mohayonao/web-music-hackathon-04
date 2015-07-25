@@ -69,22 +69,22 @@ describe("utils", () => {
       assert(utils.defaults(UNDEFINED, 0) === 0);
     });
   });
-  describe("finedetune(fine: number): number", () => {
+  describe("findet(fine: number): number", () => {
     it("works", () => {
-      assert(utils.finedetune(0) === 0);
-      assert(closeTo(utils.finedetune(60), 100, 1));
-      assert(closeTo(utils.finedetune(123), 200, 1));
-      assert(closeTo(utils.finedetune(189), 300, 1));
-      assert(closeTo(utils.finedetune(260), 400, 1));
-      assert(closeTo(utils.finedetune(335), 500, 1));
-      assert(closeTo(utils.finedetune(414), 600, 1));
-      assert(closeTo(utils.finedetune(498), 700, 1));
-      assert(closeTo(utils.finedetune(587), 800, 1));
-      assert(closeTo(utils.finedetune(682), 900, 1));
-      assert(closeTo(utils.finedetune(782), 1000, 1));
-      assert(closeTo(utils.finedetune(888), 1100, 1));
-      assert(closeTo(utils.finedetune(1000), 1200, 1e-6));
-      assert(closeTo(utils.finedetune(-1000), -1200, 1e-6));
+      assert(utils.findet(0) === 0);
+      assert(closeTo(utils.findet(60), 100, 1));
+      assert(closeTo(utils.findet(123), 200, 1));
+      assert(closeTo(utils.findet(189), 300, 1));
+      assert(closeTo(utils.findet(260), 400, 1));
+      assert(closeTo(utils.findet(335), 500, 1));
+      assert(closeTo(utils.findet(414), 600, 1));
+      assert(closeTo(utils.findet(498), 700, 1));
+      assert(closeTo(utils.findet(587), 800, 1));
+      assert(closeTo(utils.findet(682), 900, 1));
+      assert(closeTo(utils.findet(782), 1000, 1));
+      assert(closeTo(utils.findet(888), 1100, 1));
+      assert(closeTo(utils.findet(1000), 1200, 1e-6));
+      assert(closeTo(utils.findet(-1000), -1200, 1e-6));
     });
   });
   describe("linexp(value: number, inMin, inMax, outMin, outMax): number", () => {

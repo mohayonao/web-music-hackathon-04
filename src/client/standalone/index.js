@@ -1,11 +1,11 @@
 import StandaloneApp from "./components/StandaloneApp";
 import Router from "./Router";
-import WebAudioUtils from "../../utils/WebAudioUtils";
+import utils from "./utils";
 
 function run() {
   let router = new Router();
 
-  WebAudioUtils.chore();
+  utils.chore();
 
   router.createAction("/midi-device/request");
   router.createAction("/storage/get");

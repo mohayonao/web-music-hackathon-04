@@ -1,5 +1,5 @@
-import xtend from "xtend";
 import utils from "../utils";
+import WebAudioUtils from "../utils/WebAudioUtils";
 
 function getPerformanceLevel() {
   let canvas = document.createElement("canvas");
@@ -47,6 +47,6 @@ function getPerformanceLevel() {
   return 0;
 }
 
-export default xtend(utils, {
+export default utils.xtend(utils, WebAudioUtils, {
   getPerformanceLevel: utils.once(getPerformanceLevel),
 });

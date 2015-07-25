@@ -2,7 +2,7 @@ import Instrument, { INITIALIZE, CREATE, NOTE_ON, NOTE_OFF, DISPOSE } from "../I
 import Envelope from "@mohayonao/envelope";
 import Operator from "@mohayonao/operator";
 import FMSynth from "@mohayonao/fm-synth";
-import utils from "../utils";
+import utils from "./utils";
 
 const RELEASE_TIME = 2.5;
 const GAIN_UP = 1.25;
@@ -28,7 +28,7 @@ export default class SweepPad extends Instrument {
 
     opB.setPeriodicWave(this.waveB);
     opB.frequency.value = frequency;
-    opB.detune.value = utils.finedetune(3);
+    opB.detune.value = utils.findet(3);
     opB.setEnvelope(Envelope.ads(0.01, 1.50, utils.dbamp(-14) * frequency * 50));
 
     opC.setPeriodicWave(this.waveC);
@@ -37,7 +37,7 @@ export default class SweepPad extends Instrument {
 
     opD.setPeriodicWave(this.waveD);
     opD.frequency.value = frequency;
-    opD.detune.value = utils.finedetune(-7);
+    opD.detune.value = utils.findet(-7);
     opD.setEnvelope(Envelope.ads(0.01, 1.50, utils.dbamp(-14) * frequency * 50));
 
     this.fmsynth = new FMSynth(7, [ opA, opB, opC, opD ]);
