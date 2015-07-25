@@ -12,6 +12,7 @@ export default class Visualizer2 {
     this._animations = [];
     this._onprocess = this._onprocess.bind(this);
     this.buf = null;
+    this.spec = null;
   }
 
   start() {
@@ -29,13 +30,18 @@ export default class Visualizer2 {
     this._timerId = 0;
   }
 
-  add(buf) {
-    this.buf = buf;
+  add(buf) { 
+    this.buf  = buf;
+    // utils.appendIfNotExists(this._animations, animation);
+  }
+  add2(spec) {
+    this.spec = spec;
     // utils.appendIfNotExists(this._animations, animation);
   }
 
   remove() {
-    this.buf = null;
+    this.buf  = null;
+    this.spec = null;
     // utils.removeIfExists(this._animations, animation);
   }
 
@@ -62,12 +68,13 @@ export default class Visualizer2 {
     context.moveTo(w       ,0);
     context.lineTo(w       ,h);
     context.stroke();
-    if (this.buf !== null){
+    if (this.spec !== null){
+      // console.log(this.spec);
       context.strokeStyle = "black";
       context.beginPath();
-      context.moveTo(0, this.buf[0]);
-      for (var i=1; i<w; i++) {
-          context.lineTo(i, h/2 + (this.buf[i] * h/2));
+      context.moveTo(0, (- this.spec[0]) / 140 * h);
+      for (var i=1; i<this.spec.length; i++) {
+          context.lineTo(i/this.spec.length*w, (- this.spec[0]) / 140 * h);
       }
       context.stroke();
     }

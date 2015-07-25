@@ -67,6 +67,11 @@ function run() {
     visualizer.add(buf);
   });
 
+  router.on("soundtest2", (spec) => {
+    // visualizer.add(hoge);
+    visualizer.add2(spec);
+  });
+
   React.render(
     React.createElement(MainApp, { router }),
     document.getElementById("app")
