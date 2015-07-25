@@ -10,7 +10,7 @@ export default class SoundAction extends fluxx.Action {
           if (!exec) {
               setTimeout(function() {
                   exec = false;
-              }, 300);
+              }, 200);
 
               // proc
               var x = event.beta;  // In degree in the range [-180,180]
@@ -37,7 +37,7 @@ export default class SoundAction extends fluxx.Action {
           }
       }, false);
   }
-    
+
     ["/toggle-button/click/sound"]() {
     this.doneAction("/toggle-button/click/sound");
   }
