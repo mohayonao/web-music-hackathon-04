@@ -62,9 +62,9 @@ export default class SquareLead extends Instrument {
       var x = this.params[2];
       var y = this.params[10];
 
-      this.filter.frequency.value = this.frequency * utils.linexp(x, 0, 180, 0.5, 12);
+      this.filter.frequency.value = this.frequency * utils.linexp(x, 0, 120, 0.5, 12);
       //this.filter.frequency.value = this.frequency * (x / 90 + 1);
-      this.filter.Q.value = utils.linexp(y, 0, 180, 2, 40);
+      this.filter.Q.value = utils.linexp(y, 0, 120, 2, 40);
       //this.filter.Q.value = (y / 180) * 30; // 0 - 30
       //this.filter.frequency.value = this.frequency * 2;
       //this.filter.Q.value = ; // 0 - 30
