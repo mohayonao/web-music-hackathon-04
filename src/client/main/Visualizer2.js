@@ -68,19 +68,26 @@ export default class Visualizer2 {
     context.moveTo(w       ,0);
     context.lineTo(w       ,h);
     context.stroke();
-    if (this.spec !== null){
+    if (this.spec !== null) {
       // console.log(this.spec);
       context.strokeStyle = "black";
       context.beginPath();
-      context.moveTo(0, (- this.spec[0]) / 140 * h);
-      for (var i=1; i<this.spec.length; i++) {
-          context.lineTo(i/this.spec.length*w, (- this.spec[0]) / 140 * h);
+      context.moveTo(0, -this.spec[0] / 240 * h + 100);
+      for (var i = 1; i < this.spec.length; i++) {
+        context.lineTo(i / this.spec.length * w, -this.spec[i] / 240 * h + 100);
       }
       context.stroke();
     }
-
-
-    // this._animations.forEach((animation) => {
+    
+    if (this.buf !== null) {
+      context.strokeStyle = "black";
+      context.beginPath();
+      context.moveTo(0, this.buf[0]);
+      for (var i=1; i<w; i++) {
+        context.lineTo(i, h/2 + (this.buf[i] * h/2));
+      }
+      context.stroke();
+    }
     //   animation(context, t1);
     // });
   }
