@@ -2,8 +2,8 @@ import utils from "./utils";
 
 export default class Visualizer2 {
   constructor(canvas, fps) {
-    canvas.width = 512;
-    canvas.height = 256;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
 
     this.canvas = canvas;
     this.context = canvas.getContext("2d");
@@ -41,31 +41,33 @@ export default class Visualizer2 {
 
   _onprocess() {
     let context = this.context;
+    let w = this.canvas.width;
+    let h = this.canvas.height;
     // let t1 = Date.now();
 
     // context.fillStyle = "#FFFFFF";
     // context.fillRect(0, 0, 1, 1);
 
-    context.clearRect(0,0,512,256);
-    context.strokeStyle = "red";
+    context.clearRect(0,0,w,h);
+    context.strokeStyle = 'rgb(255, 128, 128)';
     context.beginPath();
-    context.moveTo(0,0);
-    context.lineTo(0,256);
-    context.moveTo(128,0);
-    context.lineTo(128,256);
-    context.moveTo(256,0);
-    context.lineTo(256,256);
-    context.moveTo(384,0);
-    context.lineTo(384,256);
-    context.moveTo(512,0);
-    context.lineTo(512,256);
+    context.moveTo(0       ,0);
+    context.lineTo(0       ,h);
+    context.moveTo(w * 0.25,0);
+    context.lineTo(w * 0.25,h);
+    context.moveTo(w * 0.50,0);
+    context.lineTo(w * 0.50,h);
+    context.moveTo(w * 0.75,0);
+    context.lineTo(w * 0.75,h);
+    context.moveTo(w       ,0);
+    context.lineTo(w       ,h);
     context.stroke();
     if (this.buf !== null){
       context.strokeStyle = "black";
       context.beginPath();
       context.moveTo(0, this.buf[0]);
-      for (var i=1;i<512;i++) {
-          context.lineTo(i,128+(this.buf[i]*128));
+      for (var i=1; i<w; i++) {
+          context.lineTo(i, h/2 + (this.buf[i] * h/2));
       }
       context.stroke();
     }
