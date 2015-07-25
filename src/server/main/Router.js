@@ -88,6 +88,15 @@ export default class Router extends fluxx.Server {
     for (let i = 0; i < 8; i++) {
       utils.setLED(i, params[i + 16] ? "light green" : "off");
     }
+
+    let address = "/hack/params";
+    let args = [];
+
+    for (let i = 0; i < 24; i++) {
+      args[i] = { type: "integer", value: params[i] };
+    }
+
+    utils.sendOSC({ address, args });
   }
 
   resetSoundPlay() {
