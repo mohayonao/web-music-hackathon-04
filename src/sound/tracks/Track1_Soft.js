@@ -10,6 +10,13 @@ export default class Track1 extends Track {
         "FMPiano",
         "PlasticHarp",
         "PureVibes",
+        "FMPiano",
+        "PlasticHarp",
+        "PureVibes",
+        "FMPiano",
+        "PlasticHarp",
+        "PureVibes",
+        "Beep",
       ]);
 
       next(utils.xtend(data, { program }));

@@ -1,5 +1,5 @@
 import Track from "../Track";
-// import utils from "./utils";
+import utils from "./utils";
 
 export default class Track3 extends Track {
   constructor(...args) {
@@ -10,7 +10,7 @@ export default class Track3 extends Track {
     });
 
     this.pipe(splitter.channels[1]).pipe(this.extend({
-      program: "SweepPad",
+      program: utils.sample([ "SweepPad" ]),
     })).pipe(this.output);
 
     this.pipe(splitter.channels[2]).pipe(this.filter((data) => {

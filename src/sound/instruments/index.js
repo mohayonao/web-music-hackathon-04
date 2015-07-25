@@ -1,4 +1,5 @@
 import AnalogBass from "./AnalogBass";
+import ArpeggioPad from "./ArpeggioPad";
 import Beep from "./Beep";
 import DecayNoise from "./DecayNoise";
 import DelayTone from "./DelayTone";
@@ -22,6 +23,7 @@ import utils from "./utils";
 
 let presets = {
   AnalogBass,
+  ArpeggioPad,
   Beep,
   DecayNoise,
   DelayTone,
@@ -50,6 +52,7 @@ function getClass(program) {
 
   return utils.sample([
     AnalogBass,
+    ArpeggioPad,
     Beep,
     DecayNoise,
     DelayTone,

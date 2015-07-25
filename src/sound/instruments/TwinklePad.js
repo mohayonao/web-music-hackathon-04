@@ -50,7 +50,11 @@ export default class TwinklePad extends Instrument {
 
   [NOTE_ON](t0) {
     this.fmsynth.start(t0);
-    this.filter.frequency.setValueCurveAtTime(this.cutoffValues, t0, 30);
+
+    let speed = utils.linlin(this.params[15], 0, 127, 120, 30);
+
+    this.filter.frequency.setValueCurveAtTime(this.cutoffValues, t0, speed);
+
     this.releaseNode.gain.setValueAtTime(this.volume * GAIN_UP, t0);
   }
 
