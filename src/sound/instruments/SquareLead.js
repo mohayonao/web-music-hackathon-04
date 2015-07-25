@@ -16,6 +16,7 @@ export default class SquareLead extends Instrument {
     let opB = new Operator(this.audioContext);
     let opC = new Operator(this.audioContext);
     let opD = new Operator(this.audioContext);
+    this.frequency = frequency;
 
     opA.type = "square";
     opA.frequency.value = frequency;
@@ -42,11 +43,44 @@ export default class SquareLead extends Instrument {
       this.emit("ended");
     };
 
+    this.filter = this.audioContext.createBiquadFilter();
+
     this.releaseNode = this.audioContext.createGain();
 
-    this.synth.connect(this.releaseNode);
+    this.synth.connect(this.filter);
+    this.filter.connect(this.releaseNode);
 
     this.outlet = this.releaseNode;
+
+      this.updateFilter();
+  }
+
+  updateFilter() {
+      //var x = this.params[2] / 127 + 1;
+      //var y = this.params[10] / 127 + 1;
+
+      var x = this.params[2];
+      var y = this.params[10];
+
+      this.filter.frequency.value = this.frequency * utils.linexp(x, 0, 180, 0.5, 12);
+      //this.filter.frequency.value = this.frequency * (x / 90 + 1);
+      this.filter.Q.value = utils.linexp(y, 0, 180, 2, 40);
+      //this.filter.Q.value = (y / 180) * 30; // 0 - 30
+      //this.filter.frequency.value = this.frequency * 2;
+      //this.filter.Q.value = ; // 0 - 30
+
+    //console.log('SquareLead: frequency=' + this.filter.frequency.value
+    //            + ', Q=' + this.filter.Q.value);
+  }
+
+  ["/param:2"]() {
+      console.log('SquareLead: param[2]=' + this.params[2]);
+      this.updateFilter();
+  }
+
+  ["/param:10"]() {
+      console.log('SquareLead: param[10]=' + this.params[10]);
+      this.updateFilter();
   }
 
   [NOTE_ON](t0) {
