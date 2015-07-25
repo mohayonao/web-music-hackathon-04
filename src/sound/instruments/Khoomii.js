@@ -1,6 +1,6 @@
 import Instrument, { INITIALIZE, CREATE, NOTE_ON, NOTE_OFF, DISPOSE } from "../Instrument";
 import Envelope from "@mohayonao/envelope";
-import Operator from "@mohayonao/operator";
+// import Operator from "@mohayonao/operator";
 // import FMSynth from "@mohayonao/fm-synth";
 import utils from "./utils";
 
@@ -12,7 +12,7 @@ const FORMANT_PARAMS = {
   i: [ 300, 2700, 2700 ],
   u: [ 390, 1200, 2500 ],
   e: [ 450, 1750, 2750 ],
-  o: [ 460,  880, 2800 ],
+  o: [ 460, 880, 2800 ],
 };
 
 export default class Template extends Instrument {
