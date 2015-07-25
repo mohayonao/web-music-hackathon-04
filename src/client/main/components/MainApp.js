@@ -36,14 +36,21 @@ export default class MainApp extends React.Component {
       trueValue: "SOUND ON",
       falseValue: "SOUND OFF",
     };
+    let myButtonData = {
+      value: this.state.sound.enabled,
+      trueValue: "SOUND ON",
+      falseValue: "SOUND OFF",
+    };
 
     return (
       <div>
         <h1 style={ styles }>WEB MUSIC HACKATHON 04</h1>
+        <ToggleButton router={ router } data={ myButtonData } action="mybtn" />
         <div>
           <ToggleButton router={ router } data={ soundButtonData } action="sound" />
           <div>connected: { this.state.server.connected }</div>
         </div>
+        <div id="orientation"></div>
       </div>
     );
   }

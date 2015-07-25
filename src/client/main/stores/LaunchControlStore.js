@@ -10,6 +10,7 @@ export default class LaunchControlStore extends fluxx.Store {
 
   ["/launch-control/params/update"]({ params }) {
     this.data.params = params;
+    console.log(params);
     this.emitChange();
   }
 }

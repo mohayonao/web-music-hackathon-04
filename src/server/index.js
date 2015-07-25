@@ -21,6 +21,17 @@ app.get("/start", (req, res) => {
   res.send("OK: Start Sequencer\n");
 });
 
+app.get("/pad", (req, res) => {
+  if (req.headers.host !== `127.0.0.1:${config.SERVER_PORT}`) {
+    return res.status(400).send("Bad Request\n");
+  }
+
+  app.emit("/app/delegate", { address: "/launch-control/pad", data:{
+      track: 2
+  }});
+  res.send("OK: Start Sequencer\n");
+});
+
 app.get("/stop", (req, res) => {
   if (req.headers.host !== `127.0.0.1:${config.SERVER_PORT}`) {
     return res.status(400).send("Bad Request\n");
