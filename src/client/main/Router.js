@@ -41,6 +41,9 @@ export default class Router extends fluxx.Client {
     this.stores = Object.keys(stores).map(className => new stores[className](this));
 
     this.addChangeListener(this.updateStateFromStore.bind(this));
+    this.socket.once("mybtnsend", (serverCurrentTime) => {
+        console.log('test mybtnsend');
+    });
   }
 
   get state() {
