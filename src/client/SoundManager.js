@@ -1,5 +1,4 @@
-var bufSize = 1024;
-var spec = new Float32Array(bufSize/2 + 1);
+const BUF_SIZE = 1024;
 
 export default class SoundManager {
   constructor({ audioContext, timeline }) {
@@ -7,25 +6,11 @@ export default class SoundManager {
     this.timeline = timeline;
     this.inlet = audioContext.createGain();
     this.state = "suspended";
-    
-    // 追加
-    this.processor = audioContext.createScriptProcessor(bufSize, 1, 1);
-    
-    this.analyser = audioContext.createAnalyser();
-    this.analyser.fftSize = bufSize;
-    
-    this.processor.onaudioprocess = (ev) => {
-      var inbuf0 = ev.inputBuffer.getChannelData(0);
-      
-      this.analyser.getFloatFrequencyData(spec); //Spectrum Data
-      
-      // console.log(spec);
-      this.router.emit("soundtest", inbuf0);
-      this.router.emit("soundtest2", spec);
-      
-      ev.outputBuffer.getChannelData(0).set(inbuf0);
 
-    };
+    this.analyser = audioContext.createAnalyser();
+    this.analyser.fftSize = BUF_SIZE;
+    this.frequencyData = new Float32Array(this.analyser.frequencyBinCount);
+    this.timeDomainData = new Float32Array(this.analyser.fftSize);
   }
 
   start() {
@@ -33,9 +18,8 @@ export default class SoundManager {
       this.inlet.gain.setValueAtTime(0, this.audioContext.currentTime);
       this.inlet.gain.linearRampToValueAtTime(0.5, this.audioContext.currentTime + 0.01);
 
-      this.inlet.connect(this.processor);
       this.inlet.connect(this.analyser);
-      this.processor.connect(this.audioContext.destination);
+      this.analyser.connect(this.audioContext.destination);
 
       this.state = "running";
     }
@@ -54,5 +38,17 @@ export default class SoundManager {
     }
 
     return this;
+  }
+
+  getFloatFrequencyData() {
+    this.analyser.getFloatFrequencyData(this.frequencyData);
+
+    return this.frequencyData;
+  }
+
+  getFloatTimeDomainData() {
+    this.analyser.getFloatTimeDomainData(this.timeDomainData);
+
+    return this.timeDomainData;
   }
 }

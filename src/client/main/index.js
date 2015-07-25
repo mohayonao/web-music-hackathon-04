@@ -1,6 +1,6 @@
 import Router from "./Router";
 import MainApp from "./components/MainApp";
-import Visualizer2 from "./Visualizer2";
+import Visualizer from "./Visualizer";
 import utils from "./utils";
 
 function run() {
@@ -8,7 +8,7 @@ function run() {
   let router = new Router(socket);
   let button = document.getElementById("button");
   let canvas = document.getElementById("canvas");
-  let visualizer = new Visualizer2(canvas);
+  let visualizer = new Visualizer(canvas);
 
   switch (utils.getPerformanceLevel()) {
     case 2:
@@ -20,6 +20,10 @@ function run() {
     default:
       visualizer.fps = 5;
       break;
+  }
+
+  if (global.location.hash === "#ctrl" && "ondeviceorientation" in global) {
+    router.createAction("/event/deviceorientation", { enabled: true });
   }
 
   router.syncTime();
@@ -40,36 +44,70 @@ function run() {
   });
 
   router.on("noteOn", (instance) => {
-    // let t0 = Date.now();
-    // let duration = instance.duration;
+    let t0 = Date.now();
+    let duration = instance.duration;
 
-    // function animation(context, t1) {
-    //   let elapsed = (t1 - t0) * 0.001;
-    //   let a = utils.constrain(utils.linlin(elapsed, 0, duration, 1, 0), 0, 1);
+    function animation(canvas, t1) {
+      let elapsed = (t1 - t0) * 0.001;
+      let a = utils.constrain(utils.linlin(elapsed, 0, duration, 1, 0), 0, 0.5);
 
-    //   if (a === 0) {
-    //     visualizer.remove(animation);
-    //   } else {
-    //     context.fillStyle = `rgba(200, 239, 234, ${a})`;
-    //     context.fillRect(0, 0, 1, 1);
-    //   }
-    // }
+      if (a === 0) {
+        visualizer.remove(animation);
+      } else {
+        canvas.context.fillStyle = `rgba(200, 239, 234, ${a})`;
+        canvas.context.fillRect(0, 0, canvas.width, canvas.height);
+      }
+    }
 
-    // visualizer.add(animation);
+    visualizer.unshift(animation);
 
-    // instance.on("ended", () => {
-    //   visualizer.remove(animation);
-    // });
-  });
-  
-  router.on("soundtest", (buf) => {
-    // visualizer.add(hoge);
-    visualizer.add(buf);
+    instance.on("ended", () => {
+      visualizer.remove(animation);
+    });
   });
 
-  router.on("soundtest2", (spec) => {
-    // visualizer.add(hoge);
-    visualizer.add2(spec);
+  visualizer.push((canvas) => {
+    let { width, height, context } = canvas;
+
+    // grid
+    context.beginPath();
+    context.strokeStyle = "#009F8C";
+
+    [ 0.25, 0.50, 0.75 ].forEach((rate) => {
+      context.moveTo(rate * width, 0);
+      context.lineTo(rate * width, height);
+    });
+
+    context.stroke();
+
+    // spectrum
+    let frequencyData = router.soundManager.getFloatFrequencyData();
+
+    context.strokeStyle = "#DF81A2";
+    context.beginPath();
+    context.moveTo(0, frequencyData[0] / 240 * height + 100);
+
+    for (let i = 1, imax = frequencyData.length; i < imax; i++) {
+      context.lineTo(i / imax * width, -frequencyData[i] / 240 * height + 100);
+    }
+
+    context.stroke();
+
+    // wave
+    let timeDomainData = router.soundManager.getFloatTimeDomainData();
+
+    context.strokeStyle = "#DF81A2";
+    context.beginPath();
+    context.moveTo(0, utils.linlin(timeDomainData[0], -1, 1, height, 0));
+
+    for (let i = 1, imax = timeDomainData.length; i < imax; i++) {
+      let x = i / imax * width;
+      let y = utils.linlin(timeDomainData[i], -1, 1, height, 0);
+
+      context.lineTo(x, y);
+    }
+
+    context.stroke();
   });
 
   React.render(

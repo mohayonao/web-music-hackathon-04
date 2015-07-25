@@ -36,11 +36,6 @@ export default class MainApp extends React.Component {
       trueValue: "SOUND ON",
       falseValue: "SOUND OFF",
     };
-    let myButtonData = {
-      value: this.state.sound.enabled,
-      trueValue: "SOUND ON",
-      falseValue: "SOUND OFF",
-    };
 
     return (
       <div>
