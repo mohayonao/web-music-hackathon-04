@@ -15,6 +15,7 @@ export default class Distorted extends Instrument {
     let opA = new Operator(this.audioContext);
     let opB = new Operator(this.audioContext);
     let opC = new Operator(this.audioContext);
+    this.frequency = frequency;
 
     opA.frequency.value = frequency * 0.5;
     opA.setEnvelope(Envelope.ads(0.005, 0.100, utils.dbamp(-2)));
@@ -31,11 +32,38 @@ export default class Distorted extends Instrument {
       this.emit("ended");
     };
 
+    this.filter = this.audioContext.createBiquadFilter();
+    //this.filter.type = "highpass";
+
     this.releaseNode = this.audioContext.createGain();
 
-    this.fmsynth.connect(this.releaseNode);
+    this.fmsynth.connect(this.filter);
+    this.filter.connect(this.releaseNode);
 
     this.outlet = this.releaseNode;
+
+      this.updateFilter();
+  }
+
+  updateFilter() {
+      var x = this.params[2];
+      var y = this.params[10];
+
+      this.filter.frequency.value = this.frequency * utils.linexp(x, 0, 180, 0.5, 12);
+      this.filter.Q.value = utils.linexp(y, 0, 180, 16, 80);
+
+      //console.log('SquareLead: frequency=' + this.filter.frequency.value
+      //            + ', Q=' + this.filter.Q.value);
+  }
+
+  ["/param:2"]() {
+      //console.log('Di: param[2]=' + this.params[2]);
+      this.updateFilter();
+  }
+
+  ["/param:10"]() {
+      //console.log('SquareLead: param[10]=' + this.params[10]);
+      this.updateFilter();
   }
 
   [NOTE_ON](t0) {
