@@ -49,8 +49,8 @@ export default class Distorted extends Instrument {
       var x = this.params[2];
       var y = this.params[10];
 
-      this.filter.frequency.value = this.frequency * utils.linexp(x, 0, 180, 0.5, 12);
-      this.filter.Q.value = utils.linexp(y, 0, 180, 16, 80);
+      this.filter.frequency.value = this.frequency * utils.linexp(x, 0, 120, 0.5, 12);
+      this.filter.Q.value = utils.linexp(y, 0, 120, 16, 80);
 
       //console.log('SquareLead: frequency=' + this.filter.frequency.value
       //            + ', Q=' + this.filter.Q.value);
