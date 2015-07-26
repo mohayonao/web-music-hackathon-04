@@ -44,6 +44,7 @@ export default class MainApp extends React.Component {
           <ToggleButton router={ router } data={ soundButtonData } action="sound" />
           <div>connected: { this.state.server.connected }</div>
         </div>
+        <div id="orientation"></div>
       </div>
     );
   }

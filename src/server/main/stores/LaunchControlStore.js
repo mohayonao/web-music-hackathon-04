@@ -28,17 +28,4 @@ export default class LaunchControlStore extends fluxx.Store {
     this.data.params[track + 8] = value;
     this.emitChange();
   }
-
-  ["/launch-control/cursor"]({ direction }) {
-    switch (direction) {
-    case "left":
-      this.router.createAction("/sequencer/change/tempo", { delta: -2 });
-      break;
-    case "right":
-      this.router.createAction("/sequencer/change/tempo", { delta: +2 });
-      break;
-    default:
-      // do nothing
-    }
-  }
 }

@@ -12,6 +12,12 @@ export default class Track7 extends Track {
 
       let program = utils.sample([
         "TwinklePad",
+        "ArpeggioPad",
+        "TwinklePad",
+        "ArpeggioPad",
+        "TwinklePad",
+        "ArpeggioPad",
+        "TublarBell",
       ]);
 
       next(utils.xtend(data, { program }));

@@ -12,4 +12,5 @@ export default utils.xtend(config, {
   MIDI_CONTROLLER_NAME: "Launch Control",
   SEQUENCER_INTERVAL: 1,
   DELAY_TICKS: 90,
+  LOG_LEVEL: "log",
 });

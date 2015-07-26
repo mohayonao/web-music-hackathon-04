@@ -8,7 +8,7 @@ function run(app, socket) {
   let remoteKeyboard = new RemoteKeyboard(config.REMOTE_KEYBOARD_PORT, config.REMOTE_KEYBOARD_HOST);
 
   utils.useLaunchControl();
-  utils.useMIDIKeyboard();
+  // utils.useMIDIKeyboard();
   utils.useOSCReceiver();
   utils.dispatcher.register(router);
   utils.dispatcher.register(remoteKeyboard);

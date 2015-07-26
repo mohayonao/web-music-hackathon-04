@@ -22,6 +22,9 @@ export default class StorageAction extends fluxx.Action {
     }
 
     this.router.createAction("/sound/load/score", { name: cache.song });
+    this.router.createAction("/midi-keyboard/preset", {
+      presetName: cache.midiKeyboardPresetName,
+    });
     this.doneAction("/storage/get", cache);
   }
 

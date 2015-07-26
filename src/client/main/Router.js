@@ -30,6 +30,10 @@ export default class Router extends fluxx.Client {
     this.soundCreator = new SoundCreator(soundOpts);
     this.soundDispatcher = new SoundDispatcher(soundOpts);
     this.soundManager = new SoundManager(soundOpts);
+
+    // 追加
+    this.soundManager.router = this;
+
     this.soundDispatcher.connect(this.soundManager.inlet);
 
     this.soundCreator.on("created", (instance) => {

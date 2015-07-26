@@ -31,11 +31,33 @@ export default class Distorted extends Instrument {
       this.emit("ended");
     };
 
+    this.frequency = frequency;
+    this.filter = this.audioContext.createBiquadFilter();
+    this.filter.type = "lowpass";
+    this.updateFilter();
+
     this.releaseNode = this.audioContext.createGain();
 
-    this.fmsynth.connect(this.releaseNode);
+    this.fmsynth.connect(this.filter);
+    this.filter.connect(this.releaseNode);
 
     this.outlet = this.releaseNode;
+  }
+
+  updateFilter() {
+    let x = this.params[2];
+    let y = this.params[10];
+
+    this.filter.frequency.value = this.frequency * utils.linexp(x, 0, 127, 0.5, 12);
+    this.filter.Q.value = utils.linlin(y, 0, 127, 16, 80);
+  }
+
+  ["/param:2"]() {
+    this.updateFilter();
+  }
+
+  ["/param:10"]() {
+    this.updateFilter();
   }
 
   [NOTE_ON](t0) {

@@ -27,4 +27,11 @@ export default class SoundStore extends fluxx.Store {
 
     this.router.socket.emit("enabled", enabled);
   }
+
+  ["/devicemotion/orientation"]({ point }) {
+    this.router.sendAction("/devicemotion/orientation", {
+      x: point.x,
+      y: point.y,
+    });
+  }
 }

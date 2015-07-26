@@ -1,4 +1,5 @@
 import AnalogBass from "./AnalogBass";
+import ArpeggioPad from "./ArpeggioPad";
 import Beep from "./Beep";
 import DecayNoise from "./DecayNoise";
 import DelayTone from "./DelayTone";
@@ -6,6 +7,7 @@ import Distorted from "./Distorted";
 import FMBass from "./FMBass";
 import FMPiano from "./FMPiano";
 import ImpulseNoise from "./ImpulseNoise";
+import Khoomii from "./Khoomii";
 import PlasticHarp from "./PlasticHarp";
 import PureVibes from "./PureVibes";
 import SAHFilteredNoise from "./SAHFilteredNoise";
@@ -21,6 +23,7 @@ import utils from "./utils";
 
 let presets = {
   AnalogBass,
+  ArpeggioPad,
   Beep,
   DecayNoise,
   DelayTone,
@@ -28,6 +31,7 @@ let presets = {
   FMBass,
   FMPiano,
   ImpulseNoise,
+  Khoomii,
   PlasticHarp,
   PureVibes,
   SAHFilteredNoise,
@@ -48,6 +52,7 @@ function getClass(program) {
 
   return utils.sample([
     AnalogBass,
+    ArpeggioPad,
     Beep,
     DecayNoise,
     DelayTone,

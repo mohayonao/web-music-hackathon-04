@@ -162,6 +162,19 @@ function symbol(str) {
   return typeof Symbol !== "undefined" ? Symbol(str) : (str + Date.now());
 }
 
+function throttle(func, wait) {
+  let prevExecuteTime = 0;
+
+  return function(...args) {
+    let currentTime = Date.now();
+
+    if (wait <= (currentTime - prevExecuteTime)) {
+      func(...args);
+      prevExecuteTime = currentTime;
+    }
+  };
+}
+
 function wrapAt(list, index) {
   index = (index|0) % list.length;
 
@@ -208,6 +221,7 @@ export default {
   removeIfExists,
   sample,
   symbol,
+  throttle,
   wrapAt,
   wsample,
 };

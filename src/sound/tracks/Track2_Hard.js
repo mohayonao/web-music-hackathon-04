@@ -9,6 +9,7 @@ export default class Track2 extends Track {
       let program = utils.sample([
         "Distorted",
         "SquareLead",
+        "Khoomii",
       ]);
 
       next(utils.xtend(data, { program }));

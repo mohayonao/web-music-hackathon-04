@@ -36,3 +36,22 @@ global.React = global.React || {
 global.setImmediate = global.setImmediate || function(callback) {
   setTimeout(callback, 0);
 };
+
+let AnalyserNode = global.AnalyserNode;
+
+function installGetFloatTimeDomainData() {
+  if (AnalyserNode.prototype.hasOwnProperty("getFloatTimeDomainData")) {
+    return;
+  }
+
+  let uint8 = new Uint8Array(2048);
+
+  AnalyserNode.prototype.getFloatTimeDomainData = function(array) {
+    this.getByteTimeDomainData(uint8);
+    for (let i = 0, imax = array.length; i < imax; i++) {
+      array[i] = (uint8[i] - 128) * 0.0078125;
+    }
+  };
+}
+
+installGetFloatTimeDomainData();
