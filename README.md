@@ -50,7 +50,7 @@ Please prepare at least 10 clients and a good performance wifi router.
 
 | # | track name | upper knob    | lower knob    |
 |---|------------|---------------|---------------|
-| 1 | sine tone  | modularion    | sustain level |
+| 1 | sine tone  | modulation    | sustain level |
 | 2 | keyboard   | _not use_     | _not use_     |
 | 3 | lead       | filter cutoff | filter Q      |
 | 4 | pad        | _not use_     | _not use_     |
